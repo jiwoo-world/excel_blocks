@@ -19,12 +19,7 @@
         }
 
         /* 타이틀바 */
-        .title-bar {
-            height: 32px; flex-shrink: 0;
-            background: var(--excel-green); color: white;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 10px; font-size: 12px;
-        }
+        .title-bar { height: 32px; flex-shrink: 0; background: var(--excel-green); color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; font-size: 12px; }
         .tb-left  { display: flex; align-items: center; gap: 10px; }
         .tb-center { position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; white-space: nowrap; }
         .tb-right { display: flex; gap: 1px; }
@@ -35,21 +30,13 @@
         .win-btn.close:hover { background: #c0392b; }
 
         /* 리본 탭 */
-        .ribbon-tabs {
-            height: 26px; flex-shrink: 0;
-            background: var(--excel-green);
-            display: flex; align-items: flex-end; padding: 0 6px;
-        }
+        .ribbon-tabs { height: 26px; flex-shrink: 0; background: var(--excel-green); display: flex; align-items: flex-end; padding: 0 6px; }
         .tab { padding: 4px 14px; font-size: 11px; color: rgba(255,255,255,0.85); cursor: pointer; border-radius: 3px 3px 0 0; }
         .tab:hover { color: white; background: rgba(255,255,255,0.1); }
         .tab.active { color: var(--excel-green); background: white; font-weight: 600; }
 
         /* 리본 본문 */
-        .ribbon-body {
-            height: 80px; flex-shrink: 0;
-            background: #f8f8f8; border-bottom: 2px solid #d0d0d0;
-            display: flex; align-items: stretch; padding: 4px 4px 0; overflow: hidden;
-        }
+        .ribbon-body { height: 80px; flex-shrink: 0; background: #f8f8f8; border-bottom: 2px solid #d0d0d0; display: flex; align-items: stretch; padding: 4px 4px 0; overflow: hidden; }
         .rg { display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #e0e0e0; padding: 3px 8px 2px; }
         .rg:last-child { border-right: none; }
         .rg-label { font-size: 9.5px; color: #999; padding-bottom: 1px; white-space: nowrap; }
@@ -137,16 +124,93 @@
         .modal-warn { background: #fffce8; border: 1px solid #f0d060; padding: 8px 12px; font-size: 10.5px; color: #7a5500; margin: 10px 0; border-radius: 2px; }
         .modal-tip  { background: #f0f8f0; border-left: 3px solid var(--excel-green); padding: 7px 10px; font-size: 10.5px; color: #2a5a3a; margin: 8px 0; }
 
-        /* 게임오버 */
-        #gameover-screen { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.82); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(1px); }
+        /* ══════════════════════════════════
+           게임오버 + 랭킹 모달
+        ══════════════════════════════════ */
+        #gameover-screen {
+            display: none; position: absolute; inset: 0;
+            background: rgba(255,255,255,0.82);
+            justify-content: center; align-items: center;
+            z-index: 100; backdrop-filter: blur(1px);
+        }
         #gameover-screen.show { display: flex; }
-        .go-box { background: white; border: 1px solid #bbb; border-radius: 3px; box-shadow: 0 6px 24px rgba(0,0,0,0.18); width: 340px; overflow: hidden; }
+        .go-wrap {
+            display: flex; gap: 12px; align-items: flex-start;
+            max-width: 820px; width: 100%; padding: 0 16px;
+        }
+
+        /* 왼쪽 — 게임오버 박스 */
+        .go-box {
+            background: white; border: 1px solid #bbb;
+            border-radius: 3px; box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            width: 300px; flex-shrink: 0; overflow: hidden;
+        }
         .go-head { background: #a93226; color: white; padding: 9px 14px; font-size: 12px; font-weight: 600; }
-        .go-body { padding: 20px 24px; text-align: center; }
-        .go-body h3 { font-size: 14px; margin-bottom: 6px; }
+        .go-body { padding: 16px 20px; text-align: center; }
+        .go-body h3 { font-size: 14px; margin-bottom: 4px; }
         .go-body p  { font-size: 11px; color: #666; margin: 3px 0; }
-        .go-score   { font-size: 30px; font-weight: 700; color: var(--excel-green); margin: 10px 0; }
+        .go-score   { font-size: 28px; font-weight: 700; color: var(--excel-green); margin: 8px 0; }
+        .go-stats   { font-size: 11px; color: #888; margin-bottom: 14px; }
+
+        /* 닉네임 입력 */
+        .nick-wrap { margin: 10px 0 4px; }
+        .nick-label { font-size: 10.5px; color: #555; text-align: left; display: block; margin-bottom: 4px; font-weight: 600; }
+        .nick-row { display: flex; gap: 6px; }
+        .nick-input {
+            flex-grow: 1; border: 1px solid #d0d0d0; padding: 5px 8px;
+            font-size: 12px; font-family: 'Malgun Gothic', sans-serif;
+            border-radius: 2px; outline: none;
+        }
+        .nick-input:focus { border-color: var(--excel-green); }
+        .btn-submit {
+            background: var(--excel-green); color: white; border: none;
+            padding: 5px 12px; font-size: 11px; font-weight: 600;
+            cursor: pointer; border-radius: 2px; white-space: nowrap;
+        }
+        .btn-submit:hover { background: var(--excel-green-dark); }
+        .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
+        .submit-msg { font-size: 10px; color: #888; margin-top: 4px; min-height: 14px; }
+
         .go-foot { border-top: 1px solid #e8e8e8; padding: 10px 14px; display: flex; justify-content: flex-end; gap: 6px; background: #f8f8f8; }
+
+        /* 오른쪽 — 랭킹 박스 */
+        .rank-box {
+            background: white; border: 1px solid #bbb;
+            border-radius: 3px; box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            flex-grow: 1; overflow: hidden; min-width: 0;
+        }
+        .rank-head {
+            background: var(--excel-green); color: white;
+            padding: 9px 14px; font-size: 12px; font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .rank-head-right { font-size: 10px; opacity: 0.8; }
+        .rank-table-wrap { overflow-y: auto; max-height: 320px; }
+        .rank-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 11px; font-family: 'Consolas', monospace;
+        }
+        .rank-table thead th {
+            background: #f0f0f0; border-bottom: 1px solid #d0d0d0;
+            padding: 5px 10px; text-align: center; font-size: 10px;
+            color: #666; font-weight: 600; position: sticky; top: 0;
+        }
+        .rank-table tbody td {
+            padding: 5px 10px; border-bottom: 1px solid #f0f0f0;
+            text-align: center; color: #333;
+        }
+        .rank-table tbody td.name-col { text-align: left; }
+        .rank-table tbody tr:hover td { background: #f8fdf8; }
+        .rank-table tbody tr.my-row td {
+            background: #e8f5ee; font-weight: 700; color: var(--excel-green);
+        }
+        .rank-medal { font-size: 14px; }
+        .rank-loading {
+            text-align: center; padding: 30px; color: #aaa;
+            font-size: 11px; font-family: 'Malgun Gothic', sans-serif;
+        }
+        .rank-empty { text-align: center; padding: 24px; color: #bbb; font-size: 11px; }
+        .rank-foot { border-top: 1px solid #e8e8e8; padding: 8px 12px; background: #f8f8f8; font-size: 10px; color: #999; text-align: right; }
 
         /* 토스트 */
         .toast { position: absolute; left: 50%; transform: translateX(-50%); padding: 6px 20px; border-radius: 2px; font-size: 11.5px; font-weight: 600; color: white; opacity: 0; transition: opacity 0.25s; z-index: 50; pointer-events: none; white-space: nowrap; box-shadow: 0 3px 12px rgba(0,0,0,0.18); }
@@ -428,20 +492,63 @@
 <div id="game-container">
     <canvas id="gameCanvas"></canvas>
 
+    <!-- 게임오버 + 랭킹 -->
     <div id="gameover-screen">
-        <div class="go-box">
-            <div class="go-head">🛑 런타임 오류 — Microsoft Excel</div>
-            <div class="go-body">
-                <div style="font-size:38px;margin-bottom:8px;">💀</div>
-                <h3>데이터 분석이 강제 종료되었습니다</h3>
-                <p>미결 셀이 모두 손실되었습니다.</p>
-                <div class="go-score" id="final-score">₩0</div>
-                <p id="final-stats" style="color:#888;font-size:11px;">레벨 1 · 파괴 0개</p>
+        <div class="go-wrap">
+
+            <!-- 왼쪽: 결과 + 닉네임 등록 -->
+            <div class="go-box">
+                <div class="go-head">🛑 런타임 오류 — Microsoft Excel</div>
+                <div class="go-body">
+                    <div style="font-size:34px;margin-bottom:6px;">💀</div>
+                    <h3>데이터 분석 강제 종료</h3>
+                    <p>미결 셀이 모두 손실되었습니다.</p>
+                    <div class="go-score" id="final-score">₩0</div>
+                    <div class="go-stats" id="final-stats">레벨 1 · 파괴 0개</div>
+
+                    <!-- 닉네임 입력 -->
+                    <div class="nick-wrap">
+                        <span class="nick-label">📝 닉네임을 입력하고 점수를 등록하세요</span>
+                        <div class="nick-row">
+                            <input type="text" id="nick-input" class="nick-input"
+                                   placeholder="닉네임 (최대 10자)" maxlength="10">
+                            <button class="btn-submit" id="submit-btn">등록</button>
+                        </div>
+                        <div class="submit-msg" id="submit-msg"></div>
+                    </div>
+                </div>
+                <div class="go-foot">
+                    <button class="btn-cancel" onclick="location.reload()">닫기</button>
+                    <button class="btn-ok"     onclick="location.reload()">📊 재분석 시작</button>
+                </div>
             </div>
-            <div class="go-foot">
-                <button class="btn-cancel" onclick="location.reload()">닫기</button>
-                <button class="btn-ok"    onclick="location.reload()">📊 재분석 시작</button>
+
+            <!-- 오른쪽: 랭킹 테이블 -->
+            <div class="rank-box">
+                <div class="rank-head">
+                    <span>🏆 전체 랭킹 TOP 10</span>
+                    <span class="rank-head-right" id="rank-updated"></span>
+                </div>
+                <div class="rank-table-wrap">
+                    <div class="rank-loading" id="rank-loading">📡 데이터 불러오는 중...</div>
+                    <table class="rank-table" id="rank-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th style="width:36px;">순위</th>
+                                <th class="name-col">닉네임</th>
+                                <th>점수</th>
+                                <th>레벨</th>
+                                <th>파괴</th>
+                                <th>날짜</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rank-tbody"></tbody>
+                    </table>
+                    <div class="rank-empty hidden" id="rank-empty">아직 등록된 점수가 없습니다.</div>
+                </div>
+                <div class="rank-foot" id="rank-foot"></div>
             </div>
+
         </div>
     </div>
 
@@ -472,6 +579,53 @@
     </div>
 </div>
 
+<!-- ══════════════════════════════════════
+     Firebase SDK (type="module" 필수)
+══════════════════════════════════════ -->
+<script type="module">
+import { initializeApp }                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc,
+         query, orderBy, limit, getDocs,
+         serverTimestamp }                       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ── Firebase 초기화 ── */
+const firebaseConfig = {
+    apiKey:            "AIzaSyBKJBTnmZlxuJpEs5eRVtRyfmvGRgwKjCI",
+    authDomain:        "excel-block-game.firebaseapp.com",
+    projectId:         "excel-block-game",
+    storageBucket:     "excel-block-game.firebasestorage.app",
+    messagingSenderId: "368743688166",
+    appId:             "1:368743688166:web:67a86a115d7b35ad689827",
+    measurementId:     "G-BX40F654H2"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── 랭킹 전역 노출 (게임 JS에서 호출) ── */
+window._fbReady = true;
+
+/* ── 점수 저장 ── */
+window.submitScore = async function(nickname, score, level, destroyed) {
+    await addDoc(collection(db, 'rankings'), {
+        nickname:  nickname.trim(),
+        score:     score,
+        level:     level,
+        destroyed: destroyed,
+        createdAt: serverTimestamp()
+    });
+};
+
+/* ── 랭킹 불러오기 ── */
+window.loadRanking = async function() {
+    const q    = query(collection(db, 'rankings'), orderBy('score','desc'), limit(10));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+};
+</script>
+
+<!-- ══════════════════════════════════════
+     게임 메인 스크립트
+══════════════════════════════════════ -->
 <script>
 /* ══════════════════════════════════════
    모달 단계 전환
@@ -488,19 +642,9 @@ document.getElementById('back-to-help-btn').addEventListener('click', () => {
 /* ══════════════════════════════════════
    상수
 ══════════════════════════════════════ */
-const COL_W  = 46;
-const ROW_H  = 22;
-const CELL_W = 100;
-const CELL_H = 22;
-const BALL_R = 6;
-const PADDLE_H = 10;
-
-const INIT_BALL_SPEED   = 2.0;
-const SPEED_PER_LEVEL   = 0.5;
-const MAX_BALL_SPEED    = 9.0;
-const INIT_DESCENT      = 0.006;
-const DESCENT_PER_LEVEL = 0.0015;
-const LEVEL_SCORE_STEP  = 2500;
+const COL_W  = 46, ROW_H = 22, CELL_W = 100, CELL_H = 22, BALL_R = 6, PADDLE_H = 10;
+const INIT_BALL_SPEED = 2.0, SPEED_PER_LEVEL = 0.5, MAX_BALL_SPEED = 9.0;
+const INIT_DESCENT = 0.006, DESCENT_PER_LEVEL = 0.0015, LEVEL_SCORE_STEP = 2500;
 
 /* ══════════════════════════════════════
    보스 테이블
@@ -517,23 +661,21 @@ const LEVEL_SCORE_STEP  = 2500;
         ).join('');
     body.appendChild(htr);
     for (let i = 2; i <= 32; i++) {
-        const qty    = Math.floor(Math.random()*200)+10;
-        const price  = Math.floor(Math.random()*800000)+50000;
-        const cost   = Math.floor(price*(0.5+Math.random()*0.3));
-        const profit = price - cost;
-        const rate   = ((profit/price)*100).toFixed(1);
-        const tr = document.createElement('tr');
-        if (i === 14) tr.classList.add('selected');
-        tr.innerHTML =
-            `<td style="background:#f0f0f0;text-align:center;color:#888;border:1px solid #d0d0d0;font-size:10px;">${i}</td>` +
-            `<td class="text-cell">${regions[i%regions.length]}</td>` +
-            `<td class="text-cell">${products[i%products.length]}</td>` +
-            `<td>${qty.toLocaleString()}</td>` +
-            `<td>₩${price.toLocaleString()}</td>` +
-            `<td>₩${cost.toLocaleString()}</td>` +
-            `<td style="color:${profit>0?'#217346':'#c0392b'}">₩${profit.toLocaleString()}</td>` +
-            `<td style="color:${parseFloat(rate)>20?'#217346':'#c0392b'}">${rate}%</td>` +
-            `<td class="text-cell">담당자${i}</td>` +
+        const qty=Math.floor(Math.random()*200)+10, price=Math.floor(Math.random()*800000)+50000;
+        const cost=Math.floor(price*(0.5+Math.random()*0.3)), profit=price-cost;
+        const rate=((profit/price)*100).toFixed(1);
+        const tr=document.createElement('tr');
+        if(i===14) tr.classList.add('selected');
+        tr.innerHTML=
+            `<td style="background:#f0f0f0;text-align:center;color:#888;border:1px solid #d0d0d0;font-size:10px;">${i}</td>`+
+            `<td class="text-cell">${regions[i%regions.length]}</td>`+
+            `<td class="text-cell">${products[i%products.length]}</td>`+
+            `<td>${qty.toLocaleString()}</td>`+
+            `<td>₩${price.toLocaleString()}</td>`+
+            `<td>₩${cost.toLocaleString()}</td>`+
+            `<td style="color:${profit>0?'#217346':'#c0392b'}">₩${profit.toLocaleString()}</td>`+
+            `<td style="color:${parseFloat(rate)>20?'#217346':'#c0392b'}">${rate}%</td>`+
+            `<td class="text-cell">담당자${i}</td>`+
             `<td class="text-cell">${Math.random()>0.7?'검토 필요':''}</td>`;
         body.appendChild(tr);
     }
@@ -542,119 +684,96 @@ const LEVEL_SCORE_STEP  = 2500;
 /* ══════════════════════════════════════
    보스 키
 ══════════════════════════════════════ */
-let bossMode = false;
-(function tickClock() {
-    const el = document.getElementById('boss-time');
-    if (el) {
-        const n = new Date();
-        el.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
-    }
-    setTimeout(tickClock, 1000);
+let bossMode=false;
+(function tickClock(){
+    const el=document.getElementById('boss-time');
+    if(el){const n=new Date();el.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;}
+    setTimeout(tickClock,1000);
 })();
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-        bossMode = !bossMode;
-        document.getElementById('boss-overlay').classList.toggle('show', bossMode);
-        if (bossMode) showToast('boss-toast','ESC를 다시 누르면 복귀합니다', 0);
-        else          hideToast('boss-toast');
+document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+        bossMode=!bossMode;
+        document.getElementById('boss-overlay').classList.toggle('show',bossMode);
+        if(bossMode) showToast('boss-toast','ESC를 다시 누르면 복귀합니다',0);
+        else         hideToast('boss-toast');
     }
 });
 
 /* ══════════════════════════════════════
    게임 상태
 ══════════════════════════════════════ */
-const canvas = document.getElementById('gameCanvas');
-const ctx    = canvas.getContext('2d');
-const gc     = document.getElementById('game-container');
+const canvas=document.getElementById('gameCanvas'), ctx=canvas.getContext('2d'), gc=document.getElementById('game-container');
+let gameStarted=false,score=0,level=1,lives=3,bricksDestroyed=0;
+let paddleW=120,paddleX=200,brickOffsetTop=0,curDescent=INIT_DESCENT;
+let isSuperBall=false,superTimer=0,balls=[],bricks=[],popups=[],selectedCol=-1,formulaTick=0;
 
-let gameStarted=false, score=0, level=1, lives=3, bricksDestroyed=0;
-let paddleW=120, paddleX=200, brickOffsetTop=0;
-let curDescent=INIT_DESCENT;
-let isSuperBall=false, superTimer=0;
-let balls=[], bricks=[], popups=[];
-let selectedCol=-1, formulaTick=0;
-
-const TYPES = {
-    normal:  { bg:null,      fg:'#444',    bd:'#ddd',    pts:100, hp:1 },
-    error:   { bg:'#fff2f2', fg:'#b03030', bd:'#e8b8b8', pts:200, hp:1 },
-    special: { bg:'#fffbe6', fg:'#b07000', bd:'#e8d070', pts:300, hp:1, fx:'super'  },
-    extend:  { bg:'#f0fff4', fg:'#1a7a40', bd:'#90d4a8', pts:150, hp:1, fx:'extend' },
-    frozen:  { bg:'#eef4ff', fg:'#2855a0', bd:'#a0b8e8', pts:250, hp:2 },
-    bomb:    { bg:'#fff2ea', fg:'#b04000', bd:'#e8a878', pts:500, hp:1, fx:'bomb'   },
-    multi:   { bg:'#f6eeff', fg:'#7020c0', bd:'#c898f0', pts:400, hp:1, fx:'multi'  },
-    merge:   { bg:'#e8f6ff', fg:'#0060a0', bd:'#70b8e0', pts:600, hp:3, span:2      },
+const TYPES={
+    normal: {bg:null,      fg:'#444',   bd:'#ddd',   pts:100,hp:1},
+    error:  {bg:'#fff2f2', fg:'#b03030',bd:'#e8b8b8',pts:200,hp:1},
+    special:{bg:'#fffbe6', fg:'#b07000',bd:'#e8d070',pts:300,hp:1,fx:'super'},
+    extend: {bg:'#f0fff4', fg:'#1a7a40',bd:'#90d4a8',pts:150,hp:1,fx:'extend'},
+    frozen: {bg:'#eef4ff', fg:'#2855a0',bd:'#a0b8e8',pts:250,hp:2},
+    bomb:   {bg:'#fff2ea', fg:'#b04000',bd:'#e8a878',pts:500,hp:1,fx:'bomb'},
+    multi:  {bg:'#f6eeff', fg:'#7020c0',bd:'#c898f0',pts:400,hp:1,fx:'multi'},
+    merge:  {bg:'#e8f6ff', fg:'#0060a0',bd:'#70b8e0',pts:600,hp:3,span:2},
 };
-const VALS = {
-    normal:  ['₩3,842','₩12,550','₩8,903','₩4,210','₩6,780','₩21,450','₩9,300','₩1,820','₩33,100','₩7,640'],
-    error:   ['#DIV/0!','#REF!','#NULL!','#N/A','#NAME?','#NUM!','#VALUE!'],
-    special: ['#INF!','∞ INF','MAX()','OVERFLOW'],
-    extend:  ['=LEN(A1)','=TRIM()','=PAD()','=FIT(B2)','=REPT()'],
-    frozen:  ['=LOCK()','=FREEZE','FIXED()','=IFERROR(','=ISBLANK'],
-    bomb:    ['=BOOM()','KABOOM!','=BLAST()','DELETE!','=REMOVE'],
-    multi:   ['=SPLIT()','=MULTI()','×3 BALL','FORK()','=BRANCH'],
-    merge:   ['병합된 셀','=MERGE(A:B)','MERGED CELL'],
+const VALS={
+    normal: ['₩3,842','₩12,550','₩8,903','₩4,210','₩6,780','₩21,450','₩9,300','₩1,820','₩33,100','₩7,640'],
+    error:  ['#DIV/0!','#REF!','#NULL!','#N/A','#NAME?','#NUM!','#VALUE!'],
+    special:['#INF!','∞ INF','MAX()','OVERFLOW'],
+    extend: ['=LEN(A1)','=TRIM()','=PAD()','=FIT(B2)','=REPT()'],
+    frozen: ['=LOCK()','=FREEZE','FIXED()','=IFERROR(','=ISBLANK'],
+    bomb:   ['=BOOM()','KABOOM!','=BLAST()','DELETE!','=REMOVE'],
+    multi:  ['=SPLIT()','=MULTI()','×3 BALL','FORK()','=BRANCH'],
+    merge:  ['병합된 셀','=MERGE(A:B)','MERGED CELL'],
 };
-const FORMULAS = [
-    '=VLOOKUP(A1,전월매출!A:Z,3,FALSE)',
-    '=SUMIF(B:B,"서울",C:C)',
+const FORMULAS=[
+    '=VLOOKUP(A1,전월매출!A:Z,3,FALSE)','=SUMIF(B:B,"서울",C:C)',
     '=IFERROR(VLOOKUP(K2,상품목록!A:D,4,0),"미등록")',
     '=INDEX(전월매출!C:C,MATCH(MAX(전월매출!C:C),전월매출!C:C,0))',
-    '=SUMPRODUCT((B2:B100="Q1")*(C2:C100))',
-    '=TEXT(TODAY(),"yyyy-mm-dd")&" 기준 매출"',
-    '=COUNTIF(D:D,">="&E1)',
-    '=AVERAGEIFS(F:F,A:A,"서울",B:B,"2025")',
-    '=IF(AND(B2>0,C2<>0),B2/C2,"오류")',
-    '=RANK(C2,C$2:C$200,0)',
-    '=NETWORKDAYS(B2,C2)',
-    '=OFFSET(A1,ROW()-1,0,1,1)',
+    '=SUMPRODUCT((B2:B100="Q1")*(C2:C100))','=TEXT(TODAY(),"yyyy-mm-dd")&" 기준 매출"',
+    '=COUNTIF(D:D,">="&E1)','=AVERAGEIFS(F:F,A:A,"서울",B:B,"2025")',
+    '=IF(AND(B2>0,C2<>0),B2/C2,"오류")','=RANK(C2,C$2:C$200,0)',
+    '=NETWORKDAYS(B2,C2)','=OFFSET(A1,ROW()-1,0,1,1)',
 ];
 
 /* ══════════════════════════════════════
    리사이즈
 ══════════════════════════════════════ */
-window.addEventListener('load',   resizeCanvas);
-window.addEventListener('resize', resizeCanvas);
-function resizeCanvas() {
-    canvas.width  = gc.clientWidth;
-    canvas.height = gc.clientHeight;
-    if (!gameStarted) drawGrid(0);
+window.addEventListener('load',resizeCanvas);
+window.addEventListener('resize',resizeCanvas);
+function resizeCanvas(){
+    canvas.width=gc.clientWidth; canvas.height=gc.clientHeight;
+    if(!gameStarted) drawGrid(0);
 }
 
 /* ══════════════════════════════════════
    시작
 ══════════════════════════════════════ */
-document.getElementById('start-btn').addEventListener('click', () => {
+document.getElementById('start-btn').addEventListener('click',()=>{
     document.getElementById('start-modal').classList.add('hidden');
     initGame();
 });
-function initGame() {
-    gameStarted=true; score=0; level=1; lives=3; bricksDestroyed=0;
-    curDescent=INIT_DESCENT; paddleW=120;
-    paddleX = COL_W + (canvas.width-COL_W)/2 - paddleW/2;
-    isSuperBall=false; superTimer=0; popups=[]; bricks=[];
-    balls = [{
-        x: paddleX+paddleW/2, y: canvas.height-80,
-        dx: INIT_BALL_SPEED*(Math.random()>0.5?1:-1),
-        dy: -INIT_BALL_SPEED,
-    }];
-    for (let r=0; r<8; r++) bricks.push(createRow(r*CELL_H));
-    updateUI();
-    requestAnimationFrame(loop);
+function initGame(){
+    gameStarted=true;score=0;level=1;lives=3;bricksDestroyed=0;
+    curDescent=INIT_DESCENT;paddleW=120;
+    paddleX=COL_W+(canvas.width-COL_W)/2-paddleW/2;
+    isSuperBall=false;superTimer=0;popups=[];bricks=[];
+    balls=[{x:paddleX+paddleW/2,y:canvas.height-80,dx:INIT_BALL_SPEED*(Math.random()>.5?1:-1),dy:-INIT_BALL_SPEED}];
+    for(let r=0;r<8;r++) bricks.push(createRow(r*CELL_H));
+    updateUI(); requestAnimationFrame(loop);
 }
 
 /* ══════════════════════════════════════
    벽돌 생성
 ══════════════════════════════════════ */
-function createRow(y) {
-    const cols = Math.floor((canvas.width-COL_W)/CELL_W);
-    const row=[]; let c=0;
-    while (c < cols) {
+function createRow(y){
+    const cols=Math.floor((canvas.width-COL_W)/CELL_W),row=[];let c=0;
+    while(c<cols){
         const r=Math.random();
-        const type = r<.03?'merge':r<.06?'bomb':r<.09?'multi':r<.14?'special':r<.20?'extend':r<.26?'frozen':r<.34?'error':'normal';
-        const def=TYPES[type], span=(type==='merge'&&c+2<=cols)?2:1;
-        row.push({ x:COL_W+c*CELL_W, y, w:CELL_W*span, type, span,
-            val:VALS[type][Math.floor(Math.random()*VALS[type].length)],
-            hp:def.hp, maxHp:def.hp, status:1 });
+        const type=r<.03?'merge':r<.06?'bomb':r<.09?'multi':r<.14?'special':r<.20?'extend':r<.26?'frozen':r<.34?'error':'normal';
+        const def=TYPES[type],span=(type==='merge'&&c+2<=cols)?2:1;
+        row.push({x:COL_W+c*CELL_W,y,w:CELL_W*span,type,span,val:VALS[type][Math.floor(Math.random()*VALS[type].length)],hp:def.hp,maxHp:def.hp,status:1});
         c+=span;
     }
     return row;
@@ -664,101 +783,62 @@ function createRow(y) {
    키 입력
 ══════════════════════════════════════ */
 const keys={left:false,right:false};
-document.addEventListener('keydown', e=>{
-    if(e.key==='ArrowLeft') {keys.left=true;  e.preventDefault();}
-    if(e.key==='ArrowRight'){keys.right=true; e.preventDefault();}
+document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){keys.left=true;e.preventDefault();}
+    if(e.key==='ArrowRight'){keys.right=true;e.preventDefault();}
 });
-document.addEventListener('keyup', e=>{
-    if(e.key==='ArrowLeft')  keys.left=false;
-    if(e.key==='ArrowRight') keys.right=false;
+document.addEventListener('keyup',e=>{
+    if(e.key==='ArrowLeft')keys.left=false;
+    if(e.key==='ArrowRight')keys.right=false;
 });
 
 /* ══════════════════════════════════════
    그리드
 ══════════════════════════════════════ */
-function drawGrid(offsetY) {
-    ctx.fillStyle='#fff';
-    ctx.fillRect(COL_W,ROW_H,canvas.width-COL_W,canvas.height-ROW_H);
-    if(selectedCol>=0){
-        ctx.fillStyle='rgba(33,115,70,0.06)';
-        ctx.fillRect(COL_W+selectedCol*CELL_W,ROW_H,CELL_W,canvas.height-ROW_H);
-    }
-    ctx.strokeStyle='#e8e8e8'; ctx.lineWidth=0.5;
-    const colsN=Math.ceil((canvas.width-COL_W)/CELL_W)+1;
-    const rowsN=Math.ceil((canvas.height-ROW_H)/CELL_H)+2;
-    for(let i=0;i<=colsN;i++){
-        const x=COL_W+i*CELL_W;
-        ctx.beginPath();ctx.moveTo(x,ROW_H);ctx.lineTo(x,canvas.height);ctx.stroke();
-    }
-    for(let j=0;j<=rowsN;j++){
-        const y=ROW_H+((j*CELL_H+offsetY%CELL_H+CELL_H)%(canvas.height-ROW_H));
-        ctx.beginPath();ctx.moveTo(COL_W,y);ctx.lineTo(canvas.width,y);ctx.stroke();
-    }
-    ctx.fillStyle='#f0f0f0'; ctx.fillRect(0,0,canvas.width,ROW_H);
-    ctx.fillStyle='#f0f0f0'; ctx.fillRect(0,0,COL_W,canvas.height);
-    if(selectedCol>=0){
-        ctx.fillStyle='#217346';
-        ctx.fillRect(COL_W+selectedCol*CELL_W,0,CELL_W,ROW_H);
-    }
-    ctx.font='11px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+function drawGrid(offsetY){
+    ctx.fillStyle='#fff';ctx.fillRect(COL_W,ROW_H,canvas.width-COL_W,canvas.height-ROW_H);
+    if(selectedCol>=0){ctx.fillStyle='rgba(33,115,70,0.06)';ctx.fillRect(COL_W+selectedCol*CELL_W,ROW_H,CELL_W,canvas.height-ROW_H);}
+    ctx.strokeStyle='#e8e8e8';ctx.lineWidth=0.5;
+    const colsN=Math.ceil((canvas.width-COL_W)/CELL_W)+1,rowsN=Math.ceil((canvas.height-ROW_H)/CELL_H)+2;
+    for(let i=0;i<=colsN;i++){const x=COL_W+i*CELL_W;ctx.beginPath();ctx.moveTo(x,ROW_H);ctx.lineTo(x,canvas.height);ctx.stroke();}
+    for(let j=0;j<=rowsN;j++){const y=ROW_H+((j*CELL_H+offsetY%CELL_H+CELL_H)%(canvas.height-ROW_H));ctx.beginPath();ctx.moveTo(COL_W,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+    ctx.fillStyle='#f0f0f0';ctx.fillRect(0,0,canvas.width,ROW_H);
+    ctx.fillStyle='#f0f0f0';ctx.fillRect(0,0,COL_W,canvas.height);
+    if(selectedCol>=0){ctx.fillStyle='#217346';ctx.fillRect(COL_W+selectedCol*CELL_W,0,CELL_W,ROW_H);}
+    ctx.font='11px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
     for(let i=0;i<colsN;i++){
-        const x=COL_W+i*CELL_W;
-        ctx.fillStyle=(selectedCol===i)?'#fff':'#444';
+        const x=COL_W+i*CELL_W;ctx.fillStyle=(selectedCol===i)?'#fff':'#444';
         ctx.fillText(colLabel(i),x+CELL_W/2,ROW_H/2);
-        ctx.strokeStyle='#c8c8c8'; ctx.lineWidth=0.5;
-        ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ROW_H);ctx.stroke();
+        ctx.strokeStyle='#c8c8c8';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ROW_H);ctx.stroke();
     }
-    ctx.font='10px Arial'; ctx.textAlign='right'; ctx.fillStyle='#888';
+    ctx.font='10px Arial';ctx.textAlign='right';ctx.fillStyle='#888';
     for(let j=0;j<=rowsN;j++){
         const y=ROW_H+((j*CELL_H+offsetY%CELL_H+CELL_H)%(canvas.height-ROW_H));
         const rowNum=Math.floor(brickOffsetTop/CELL_H+j)+1;
-        if(y>ROW_H){
-            ctx.fillText(rowNum,COL_W-4,y+CELL_H/2);
-            ctx.strokeStyle='#d8d8d8'; ctx.lineWidth=0.5;
-            ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(COL_W,y);ctx.stroke();
-        }
+        if(y>ROW_H){ctx.fillText(rowNum,COL_W-4,y+CELL_H/2);ctx.strokeStyle='#d8d8d8';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(COL_W,y);ctx.stroke();}
     }
-    ctx.strokeStyle='#c0c0c0'; ctx.lineWidth=1;
-    ctx.strokeRect(0,0,COL_W,canvas.height);
-    ctx.strokeRect(0,0,canvas.width,ROW_H);
-    ctx.fillStyle='#e4e4e4'; ctx.fillRect(0,0,COL_W,ROW_H);
-    ctx.strokeStyle='#b0b0b0'; ctx.lineWidth=1;
-    ctx.strokeRect(0,0,COL_W,ROW_H);
+    ctx.strokeStyle='#c0c0c0';ctx.lineWidth=1;ctx.strokeRect(0,0,COL_W,canvas.height);ctx.strokeRect(0,0,canvas.width,ROW_H);
+    ctx.fillStyle='#e4e4e4';ctx.fillRect(0,0,COL_W,ROW_H);ctx.strokeStyle='#b0b0b0';ctx.lineWidth=1;ctx.strokeRect(0,0,COL_W,ROW_H);
 }
-function colLabel(i){
-    let s='';i++;
-    while(i>0){s=String.fromCharCode(64+(i%26||26))+s;i=Math.floor((i-1)/26);}
-    return s;
-}
+function colLabel(i){let s='';i++;while(i>0){s=String.fromCharCode(64+(i%26||26))+s;i=Math.floor((i-1)/26);}return s;}
 
 /* ══════════════════════════════════════
-   벽돌
+   벽돌 그리기
 ══════════════════════════════════════ */
-function drawBricks() {
+function drawBricks(){
     bricks.forEach((row,r)=>{
         const bY=ROW_H+(r-1)*CELL_H+brickOffsetTop;
-        if(bY+CELL_H<ROW_H||bY>canvas.height) return;
+        if(bY+CELL_H<ROW_H||bY>canvas.height)return;
         row.forEach(b=>{
-            if(b.status!==1) return;
+            if(b.status!==1)return;
             const def=TYPES[b.type];
             if(def.bg){ctx.fillStyle=def.bg;ctx.fillRect(b.x+.5,bY+.5,b.w-1,CELL_H-1);}
-            if(b.maxHp>1){
-                ctx.fillStyle=`rgba(33,115,70,${0.15*(b.maxHp-b.hp+1)})`;
-                ctx.fillRect(b.x+.5,bY+.5,(b.w-1)*(b.hp/b.maxHp),CELL_H-1);
-            }
-            ctx.strokeStyle=def.bd; ctx.lineWidth=1;
-            ctx.strokeRect(b.x+.5,bY+.5,b.w-1,CELL_H-1);
-            ctx.fillStyle=def.fg;
-            ctx.font=(b.type==='merge'?'bold ':'')+' 10.5px Consolas,monospace';
-            ctx.textAlign=(b.type==='normal')?'right':'left';
-            ctx.textBaseline='middle';
+            if(b.maxHp>1){ctx.fillStyle=`rgba(33,115,70,${0.15*(b.maxHp-b.hp+1)})`;ctx.fillRect(b.x+.5,bY+.5,(b.w-1)*(b.hp/b.maxHp),CELL_H-1);}
+            ctx.strokeStyle=def.bd;ctx.lineWidth=1;ctx.strokeRect(b.x+.5,bY+.5,b.w-1,CELL_H-1);
+            ctx.fillStyle=def.fg;ctx.font=(b.type==='merge'?'bold ':'')+' 10.5px Consolas,monospace';
+            ctx.textAlign=(b.type==='normal')?'right':'left';ctx.textBaseline='middle';
             ctx.fillText(b.val,(b.type==='normal')?b.x+b.w-5:b.x+5,bY+CELL_H/2);
-            if(b.maxHp>1){
-                for(let h=0;h<b.maxHp;h++){
-                    ctx.fillStyle=h<b.hp?def.fg:'rgba(0,0,0,0.12)';
-                    ctx.beginPath();ctx.arc(b.x+b.w-8-h*8,bY+CELL_H-5,2.5,0,Math.PI*2);ctx.fill();
-                }
-            }
+            if(b.maxHp>1){for(let h=0;h<b.maxHp;h++){ctx.fillStyle=h<b.hp?def.fg:'rgba(0,0,0,0.12)';ctx.beginPath();ctx.arc(b.x+b.w-8-h*8,bY+CELL_H-5,2.5,0,Math.PI*2);ctx.fill();}}
         });
     });
 }
@@ -766,28 +846,23 @@ function drawBricks() {
 /* ══════════════════════════════════════
    패들
 ══════════════════════════════════════ */
-function drawPaddle() {
+function drawPaddle(){
     const pY=canvas.height-36;
     ctx.fillStyle='rgba(33,115,70,0.10)';ctx.fillRect(paddleX,pY-2,paddleW,CELL_H+4);
     const g=ctx.createLinearGradient(paddleX,pY,paddleX,pY+PADDLE_H);
     g.addColorStop(0,'#2ea05e');g.addColorStop(1,'#186030');
     ctx.fillStyle=g;ctx.fillRect(paddleX,pY,paddleW,PADDLE_H);
     ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillRect(paddleX,pY,paddleW,2);
-    ctx.strokeStyle='#217346';ctx.lineWidth=1.5;
-    ctx.strokeRect(paddleX-.5,pY-2,paddleW+1,CELL_H+4);
-    [[paddleX-2,pY-2],[paddleX+paddleW-3,pY-2],
-     [paddleX-2,pY+CELL_H+2],[paddleX+paddleW-3,pY+CELL_H+2]].forEach(([hx,hy])=>{
-        ctx.fillStyle='#217346';ctx.fillRect(hx,hy,5,5);
-    });
-    ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 9px Consolas';
-    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.strokeStyle='#217346';ctx.lineWidth=1.5;ctx.strokeRect(paddleX-.5,pY-2,paddleW+1,CELL_H+4);
+    [[paddleX-2,pY-2],[paddleX+paddleW-3,pY-2],[paddleX-2,pY+CELL_H+2],[paddleX+paddleW-3,pY+CELL_H+2]].forEach(([hx,hy])=>{ctx.fillStyle='#217346';ctx.fillRect(hx,hy,5,5);});
+    ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 9px Consolas';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('=PADDLE()',paddleX+paddleW/2,pY+PADDLE_H/2);
 }
 
 /* ══════════════════════════════════════
    공
 ══════════════════════════════════════ */
-function drawBalls() {
+function drawBalls(){
     balls.forEach(ball=>{
         ctx.fillStyle=isSuperBall?'rgba(220,60,40,0.10)':'rgba(40,40,40,0.07)';
         ctx.beginPath();ctx.arc(ball.x-ball.dx*3,ball.y-ball.dy*3,BALL_R,0,Math.PI*2);ctx.fill();
@@ -795,8 +870,7 @@ function drawBalls() {
         if(isSuperBall){g.addColorStop(0,'#ff8060');g.addColorStop(1,'#b03020');}
         else{g.addColorStop(0,'#ffffff');g.addColorStop(1,'#404040');}
         ctx.fillStyle=g;ctx.beginPath();ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2);ctx.fill();
-        ctx.fillStyle='rgba(255,255,255,0.55)';
-        ctx.beginPath();ctx.arc(ball.x-2,ball.y-2,2,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,0.55)';ctx.beginPath();ctx.arc(ball.x-2,ball.y-2,2,0,Math.PI*2);ctx.fill();
     });
 }
 
@@ -806,49 +880,24 @@ function drawBalls() {
 function drawPopups(){
     popups=popups.filter(p=>p.life>0);
     popups.forEach(p=>{
-        ctx.globalAlpha=Math.min(1,p.life/40);
-        ctx.fillStyle=p.color;ctx.font=`bold ${p.size}px Arial`;
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(p.text,p.x,p.y);
-        p.y-=0.9;p.life--;
-    });
-    ctx.globalAlpha=1;
+        ctx.globalAlpha=Math.min(1,p.life/40);ctx.fillStyle=p.color;ctx.font=`bold ${p.size}px Arial`;
+        ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.text,p.x,p.y);p.y-=0.9;p.life--;
+    });ctx.globalAlpha=1;
 }
-function addPopup(x,y,text,color='#217346',size=12){
-    popups.push({x,y,text,color,size,life:55});
-}
+function addPopup(x,y,text,color='#217346',size=12){popups.push({x,y,text,color,size,life:55});}
 
 /* ══════════════════════════════════════
-   아이템 효과
+   아이템
 ══════════════════════════════════════ */
 function applyFx(b,bY){
-    const fx=TYPES[b.type].fx; if(!fx) return;
-    if(fx==='super'){
-        isSuperBall=true;superTimer=360;
-        showToast('item-toast','🔥 슈퍼볼 활성화! — #INF 모드');
-    } else if(fx==='extend'){
-        paddleW=Math.min(paddleW*1.15,220);
-        showToast('item-toast','📏 패들 +15% 확장');
-    } else if(fx==='bomb'){
+    const fx=TYPES[b.type].fx;if(!fx)return;
+    if(fx==='super'){isSuperBall=true;superTimer=360;showToast('item-toast','🔥 슈퍼볼 활성화! — #INF 모드');}
+    else if(fx==='extend'){paddleW=Math.min(paddleW*1.15,220);showToast('item-toast','📏 패들 +15% 확장');}
+    else if(fx==='bomb'){
         let n=0;
-        bricks.forEach((row,ri)=>{
-            const by=ROW_H+(ri-1)*CELL_H+brickOffsetTop;
-            row.forEach(nb=>{
-                if(nb.status===1&&Math.abs(nb.x-b.x)<=CELL_W*2&&Math.abs(by-bY)<=CELL_H*2){
-                    nb.status=0;score+=TYPES[nb.type].pts;n++;
-                }
-            });
-        });
-        addPopup(b.x+b.w/2,bY,`💥 ×${n}`,'#b03000',16);
-        showToast('item-toast',`💥 폭발! 주변 ${n}개 파괴`);
-    } else if(fx==='multi'){
-        if(balls.length<5){
-            const o=balls[0];
-            balls.push({x:o.x,y:o.y,dx:-o.dx,dy:o.dy});
-            balls.push({x:o.x,y:o.y,dx:o.dx*0.7,dy:o.dy*-1.2});
-            showToast('item-toast','✨ 멀티볼! 공 ×3');
-        }
-    }
+        bricks.forEach((row,ri)=>{const by=ROW_H+(ri-1)*CELL_H+brickOffsetTop;row.forEach(nb=>{if(nb.status===1&&Math.abs(nb.x-b.x)<=CELL_W*2&&Math.abs(by-bY)<=CELL_H*2){nb.status=0;score+=TYPES[nb.type].pts;n++;}});});
+        addPopup(b.x+b.w/2,bY,`💥 ×${n}`,'#b03000',16);showToast('item-toast',`💥 폭발! 주변 ${n}개 파괴`);
+    }else if(fx==='multi'){if(balls.length<5){const o=balls[0];balls.push({x:o.x,y:o.y,dx:-o.dx,dy:o.dy});balls.push({x:o.x,y:o.y,dx:o.dx*0.7,dy:o.dy*-1.2});showToast('item-toast','✨ 멀티볼! 공 ×3');}}
 }
 
 /* ══════════════════════════════════════
@@ -857,21 +906,14 @@ function applyFx(b,bY){
 function collideBricks(ball){
     for(let r=0;r<bricks.length;r++){
         const bY=ROW_H+(r-1)*CELL_H+brickOffsetTop;
-        if(bY>canvas.height||bY+CELL_H<0) continue;
+        if(bY>canvas.height||bY+CELL_H<0)continue;
         for(const b of bricks[r]){
-            if(b.status!==1) continue;
-            if(ball.x+BALL_R>b.x&&ball.x-BALL_R<b.x+b.w&&
-               ball.y+BALL_R>bY &&ball.y-BALL_R<bY+CELL_H){
+            if(b.status!==1)continue;
+            if(ball.x+BALL_R>b.x&&ball.x-BALL_R<b.x+b.w&&ball.y+BALL_R>bY&&ball.y-BALL_R<bY+CELL_H){
                 b.hp--;
-                if(b.hp<=0){
-                    b.status=0;score+=TYPES[b.type].pts*level;bricksDestroyed++;
-                    addPopup(b.x+b.w/2,bY,`+${TYPES[b.type].pts*level}`,TYPES[b.type].fg);
-                    applyFx(b,bY);
-                } else addPopup(b.x+b.w/2,bY,`HP:${b.hp}`,'#888');
-                if(!isSuperBall){
-                    if(Math.abs(ball.x-(b.x+b.w/2))>b.w*0.3) ball.dx=-ball.dx;
-                    else ball.dy=-ball.dy;
-                }
+                if(b.hp<=0){b.status=0;score+=TYPES[b.type].pts*level;bricksDestroyed++;addPopup(b.x+b.w/2,bY,`+${TYPES[b.type].pts*level}`,TYPES[b.type].fg);applyFx(b,bY);}
+                else addPopup(b.x+b.w/2,bY,`HP:${b.hp}`,'#888');
+                if(!isSuperBall){if(Math.abs(ball.x-(b.x+b.w/2))>b.w*0.3)ball.dx=-ball.dx;else ball.dy=-ball.dy;}
                 return;
             }
         }
@@ -883,12 +925,8 @@ function collideBricks(ball){
 ══════════════════════════════════════ */
 function checkLevel(){
     if(score>=level*LEVEL_SCORE_STEP){
-        level++; curDescent+=DESCENT_PER_LEVEL;
-        balls.forEach(ball=>{
-            const spd=Math.sqrt(ball.dx**2+ball.dy**2);
-            const ns=Math.min(spd+SPEED_PER_LEVEL,MAX_BALL_SPEED);
-            ball.dx*=ns/spd; ball.dy*=ns/spd;
-        });
+        level++;curDescent+=DESCENT_PER_LEVEL;
+        balls.forEach(ball=>{const spd=Math.sqrt(ball.dx**2+ball.dy**2);const ns=Math.min(spd+SPEED_PER_LEVEL,MAX_BALL_SPEED);ball.dx*=ns/spd;ball.dy*=ns/spd;});
         showToast('level-toast',`📈 레벨 ${level} 달성 — 공 속도 +${SPEED_PER_LEVEL.toFixed(1)}`);
     }
 }
@@ -897,11 +935,7 @@ function checkLevel(){
    토스트
 ══════════════════════════════════════ */
 const toastTimers={};
-function showToast(id,msg,duration=2200){
-    const el=document.getElementById(id);
-    el.textContent=msg;el.classList.add('show');
-    if(duration>0){clearTimeout(toastTimers[id]);toastTimers[id]=setTimeout(()=>el.classList.remove('show'),duration);}
-}
+function showToast(id,msg,duration=2200){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');if(duration>0){clearTimeout(toastTimers[id]);toastTimers[id]=setTimeout(()=>el.classList.remove('show'),duration);}}
 function hideToast(id){document.getElementById(id).classList.remove('show');}
 
 /* ══════════════════════════════════════
@@ -909,8 +943,7 @@ function hideToast(id){document.getElementById(id).classList.remove('show');}
 ══════════════════════════════════════ */
 function updateFormulaBar(){
     formulaTick++;
-    if(formulaTick%110===0)
-        document.getElementById('formula-input').value=FORMULAS[Math.floor(Math.random()*FORMULAS.length)];
+    if(formulaTick%110===0)document.getElementById('formula-input').value=FORMULAS[Math.floor(Math.random()*FORMULAS.length)];
     if(balls.length>0){
         const col=Math.max(0,Math.floor((balls[0].x-COL_W)/CELL_W));
         const row=Math.max(1,Math.floor((balls[0].y-ROW_H)/CELL_H)+1);
@@ -934,87 +967,152 @@ function updateUI(){
    슈퍼볼 게이지
 ══════════════════════════════════════ */
 function drawSuperGauge(){
-    if(!isSuperBall) return;
+    if(!isSuperBall)return;
     const gw=90*(superTimer/360);
     ctx.fillStyle='rgba(200,50,30,0.75)';ctx.fillRect(COL_W+8,ROW_H+4,gw,5);
     ctx.strokeStyle='#b03020';ctx.lineWidth=1;ctx.strokeRect(COL_W+8,ROW_H+4,90,5);
-    ctx.fillStyle='#b03020';ctx.font='9px Arial';
-    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillStyle='#b03020';ctx.font='9px Arial';ctx.textAlign='left';ctx.textBaseline='middle';
     ctx.fillText('🔥SUPER',COL_W+103,ROW_H+7);
 }
 
 /* ══════════════════════════════════════
-   게임오버
+   게임오버 + 랭킹
 ══════════════════════════════════════ */
 function gameOver(){
     gameStarted=false;
     document.getElementById('final-score').textContent=`₩${score.toLocaleString()}`;
     document.getElementById('final-stats').textContent=`레벨 ${level} · 파괴 ${bricksDestroyed}개`;
     document.getElementById('gameover-screen').classList.add('show');
+
+    // 저장된 닉네임 자동 채우기
+    const savedNick=localStorage.getItem('excel_game_nick')||'';
+    document.getElementById('nick-input').value=savedNick;
+
+    // 랭킹 불러오기
+    loadRankingUI(null);
+
+    // 등록 버튼
+    const submitBtn=document.getElementById('submit-btn');
+    const submitMsg=document.getElementById('submit-msg');
+    submitBtn.disabled=false;
+    submitMsg.textContent='';
+
+    submitBtn.onclick=async()=>{
+        const nick=document.getElementById('nick-input').value.trim();
+        if(!nick){submitMsg.textContent='⚠ 닉네임을 입력해주세요.';return;}
+        if(!window._fbReady){submitMsg.textContent='⚠ Firebase 연결 중입니다. 잠시 후 시도해주세요.';return;}
+        submitBtn.disabled=true;
+        submitMsg.textContent='⏳ 저장 중...';
+        try{
+            await window.submitScore(nick,score,level,bricksDestroyed);
+            localStorage.setItem('excel_game_nick',nick);
+            submitMsg.textContent='✅ 등록 완료!';
+            // 랭킹 갱신 (내 닉네임 하이라이트)
+            loadRankingUI(nick);
+        }catch(err){
+            submitMsg.textContent='❌ 저장 실패: '+err.message;
+            submitBtn.disabled=false;
+        }
+    };
 }
+
+/* ── 랭킹 테이블 렌더링 ── */
+async function loadRankingUI(myNick){
+    const loading=document.getElementById('rank-loading');
+    const table  =document.getElementById('rank-table');
+    const empty  =document.getElementById('rank-empty');
+    const foot   =document.getElementById('rank-foot');
+    const updated=document.getElementById('rank-updated');
+
+    loading.style.display='block';
+    table.style.display='none';
+    empty.style.display='none';
+
+    try{
+        const rows=await window.loadRanking();
+        loading.style.display='none';
+
+        if(!rows||rows.length===0){
+            empty.style.display='block';return;
+        }
+
+        const medals=['🥇','🥈','🥉'];
+        const tbody=document.getElementById('rank-tbody');
+        tbody.innerHTML='';
+
+        rows.forEach((r,i)=>{
+            const isMe = myNick && r.nickname===myNick;
+            const tr=document.createElement('tr');
+            if(isMe) tr.classList.add('my-row');
+
+            // 날짜 포맷
+            let dateStr='-';
+            if(r.createdAt&&r.createdAt.toDate){
+                const d=r.createdAt.toDate();
+                dateStr=`${d.getMonth()+1}/${d.getDate()}`;
+            }
+
+            tr.innerHTML=
+                `<td><span class="rank-medal">${i<3?medals[i]:i+1}</span>${isMe?' ★':''}</td>`+
+                `<td class="name-col">${escHtml(r.nickname)}</td>`+
+                `<td>₩${Number(r.score).toLocaleString()}</td>`+
+                `<td>Lv.${r.level}</td>`+
+                `<td>${r.destroyed}개</td>`+
+                `<td>${dateStr}</td>`;
+            tbody.appendChild(tr);
+        });
+
+        table.style.display='table';
+        const now=new Date();
+        updated.textContent=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} 기준`;
+        foot.textContent=`총 ${rows.length}명의 분석관 기록`;
+
+    }catch(err){
+        loading.textContent='❌ 랭킹 불러오기 실패: '+err.message;
+    }
+}
+
+function escHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 /* ══════════════════════════════════════
    메인 루프
 ══════════════════════════════════════ */
 function loop(){
-    if(!gameStarted) return;
+    if(!gameStarted)return;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     brickOffsetTop+=curDescent;
-    if(brickOffsetTop>=CELL_H){
-        brickOffsetTop-=CELL_H;
-        bricks.unshift(createRow(0));
-        if(bricks.length>45) bricks.pop();
-    }
-    drawGrid(brickOffsetTop);
-    drawBricks();
+    if(brickOffsetTop>=CELL_H){brickOffsetTop-=CELL_H;bricks.unshift(createRow(0));if(bricks.length>45)bricks.pop();}
+    drawGrid(brickOffsetTop);drawBricks();
     const SPD=9;
-    if(keys.right) paddleX+=SPD;
-    if(keys.left)  paddleX-=SPD;
+    if(keys.right)paddleX+=SPD;if(keys.left)paddleX-=SPD;
     paddleX=Math.max(COL_W,Math.min(paddleX,canvas.width-paddleW));
     drawPaddle();
     const pY=canvas.height-36;
     for(let i=balls.length-1;i>=0;i--){
         const ball=balls[i];
         collideBricks(ball);
-        if(ball.x+ball.dx>canvas.width-BALL_R) ball.dx=-Math.abs(ball.dx);
-        if(ball.x+ball.dx<COL_W+BALL_R)        ball.dx= Math.abs(ball.dx);
-        if(ball.y+ball.dy<ROW_H+BALL_R)        ball.dy= Math.abs(ball.dy);
-        if(ball.dy>0&&
-           ball.y+ball.dy>=pY&&
-           ball.y+ball.dy<=pY+PADDLE_H+BALL_R&&
-           ball.x>=paddleX-BALL_R&&
-           ball.x<=paddleX+paddleW+BALL_R){
-            const hit=(ball.x-paddleX)/paddleW;
-            const angle=(hit-0.5)*2.2;
-            const spd=Math.sqrt(ball.dx**2+ball.dy**2);
-            ball.dx=spd*Math.sin(angle);
-            ball.dy=-Math.abs(spd*Math.cos(angle));
+        if(ball.x+ball.dx>canvas.width-BALL_R)ball.dx=-Math.abs(ball.dx);
+        if(ball.x+ball.dx<COL_W+BALL_R)ball.dx=Math.abs(ball.dx);
+        if(ball.y+ball.dy<ROW_H+BALL_R)ball.dy=Math.abs(ball.dy);
+        if(ball.dy>0&&ball.y+ball.dy>=pY&&ball.y+ball.dy<=pY+PADDLE_H+BALL_R&&ball.x>=paddleX-BALL_R&&ball.x<=paddleX+paddleW+BALL_R){
+            const hit=(ball.x-paddleX)/paddleW,angle=(hit-0.5)*2.2,spd=Math.sqrt(ball.dx**2+ball.dy**2);
+            ball.dx=spd*Math.sin(angle);ball.dy=-Math.abs(spd*Math.cos(angle));
         }
         if(ball.y>canvas.height+20){balls.splice(i,1);continue;}
-        ball.x+=ball.dx; ball.y+=ball.dy;
+        ball.x+=ball.dx;ball.y+=ball.dy;
     }
     if(balls.length===0){
         lives--;updateUI();
         if(lives<=0){drawBalls();gameOver();return;}
-        balls.push({x:paddleX+paddleW/2,y:canvas.height-80,
-            dx:INIT_BALL_SPEED*(Math.random()>0.5?1:-1),dy:-INIT_BALL_SPEED});
+        balls.push({x:paddleX+paddleW/2,y:canvas.height-80,dx:INIT_BALL_SPEED*(Math.random()>.5?1:-1),dy:-INIT_BALL_SPEED});
         showToast('item-toast',`💔 목숨 -1  남은 목숨: ${lives}`);
     }
-    drawBalls();
-    drawSuperGauge();
-    if(isSuperBall&&--superTimer<=0) isSuperBall=false;
+    drawBalls();drawSuperGauge();
+    if(isSuperBall&&--superTimer<=0)isSuperBall=false;
     let maxBY=0;
-    bricks.forEach((row,r)=>{
-        row.forEach(b=>{
-            if(b.status===1)
-                maxBY=Math.max(maxBY,ROW_H+(r-1)*CELL_H+brickOffsetTop+CELL_H);
-        });
-    });
+    bricks.forEach((row,r)=>{row.forEach(b=>{if(b.status===1)maxBY=Math.max(maxBY,ROW_H+(r-1)*CELL_H+brickOffsetTop+CELL_H);});});
     if(maxBY>pY-8){gameOver();return;}
-    drawPopups();
-    updateFormulaBar();
-    checkLevel();
-    updateUI();
+    drawPopups();updateFormulaBar();checkLevel();updateUI();
     requestAnimationFrame(loop);
 }
 </script>
