@@ -1045,11 +1045,11 @@ async function loadRankingUI(myNick){
             const tr=document.createElement('tr');
             if(isMe) tr.classList.add('my-row');
 
-            // 날짜 포맷
+            // ★ 날짜 포맷 변경 (연도 추가)
             let dateStr='-';
             if(r.createdAt&&r.createdAt.toDate){
                 const d=r.createdAt.toDate();
-                dateStr=`${d.getMonth()+1}/${d.getDate()}`;
+                dateStr=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
             }
 
             tr.innerHTML=
