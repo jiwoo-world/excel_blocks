@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전월 월매출 정리본_최최종_f.xls - Excel</title>
+    <style>
+        :root {
+            --excel-green: #217346;
+            --excel-green-dark: #1a5c38;
+            --excel-border: #d1d1d1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html {
+            width: 100%; height: 100%;
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            overflow: hidden; display: flex; flex-direction: column;
+            background: #fff; user-select: none;
+        }
+
+        /* 타이틀바 */
+        .title-bar {
+            height: 32px; flex-shrink: 0;
+            background: var(--excel-green); color: white;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 10px; font-size: 12px;
+        }
+        .tb-left  { display: flex; align-items: center; gap: 10px; }
+        .tb-center { position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; white-space: nowrap; }
+        .tb-right { display: flex; gap: 1px; }
+        .qa-btn { color: rgba(255,255,255,0.85); font-size: 12px; padding: 2px 5px; cursor: pointer; border-radius: 2px; }
+        .qa-btn:hover { background: rgba(255,255,255,0.15); }
+        .win-btn { width: 46px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; color: white; }
+        .win-btn:hover { background: rgba(255,255,255,0.2); }
+        .win-btn.close:hover { background: #c0392b; }
+
+        /* 리본 탭 */
+        .ribbon-tabs {
+            height: 26px; flex-shrink: 0;
+            background: var(--excel-green);
+            display: flex; align-items: flex-end; padding: 0 6px;
+        }
+        .tab { padding: 4px 14px; font-size: 11px; color: rgba(255,255,255,0.85); cursor: pointer; border-radius: 3px 3px 0 0; }
+        .tab:hover { color: white; background: rgba(255,255,255,0.1); }
+        .tab.active { color: var(--excel-green); background: white; font-weight: 600; }
+
+        /* 리본 본문 */
+        .ribbon-body {
+            height: 80px; flex-shrink: 0;
+            background: #f8f8f8; border-bottom: 2px solid #d0d0d0;
+            display: flex; align-items: stretch; padding: 4px 4px 0; overflow: hidden;
+        }
+        .rg { display: flex; flex-direction: column; align-items: center; justify-content: space-between; border-right: 1px solid #e0e0e0; padding: 3px 8px 2px; }
+        .rg:last-child { border-right: none; }
+        .rg-label { font-size: 9.5px; color: #999; padding-bottom: 1px; white-space: nowrap; }
+        .rg-btns { display: flex; gap: 2px; align-items: center; }
+        .rb { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px 6px; border-radius: 2px; cursor: pointer; font-size: 9px; color: #333; min-width: 34px; height: 50px; gap: 2px; }
+        .rb:hover { background: #dce8d4; border: 1px solid #a8c8a0; }
+        .rb .ico { font-size: 17px; line-height: 1; }
+        .rb-sm { flex-direction: row; height: 19px; padding: 1px 6px; font-size: 9.5px; min-width: 0; gap: 3px; align-items: center; }
+        .rb-sm .ico { font-size: 10px; }
+        .rb-col { display: flex; flex-direction: column; gap: 1px; }
+        .vdiv { width: 1px; background: #e0e0e0; margin: 3px 2px; align-self: stretch; }
+        .fsel { border: 1px solid #d0d0d0; background: white; font-size: 10px; height: 18px; padding: 0 3px; color: #333; outline: none; }
+        .fcol { display: flex; flex-direction: column; gap: 3px; }
+        .frow { display: flex; gap: 2px; align-items: center; }
+        .fb { width: 19px; height: 19px; border: 1px solid transparent; background: transparent; cursor: pointer; font-size: 11px; border-radius: 2px; display: flex; align-items: center; justify-content: center; color: #333; }
+        .fb:hover { background: #dce8d4; border-color: #a8c8a0; }
+
+        /* 수식바 */
+        .formula-bar { height: 26px; flex-shrink: 0; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; background: white; }
+        .name-box { width: 68px; border-right: 1px solid #d0d0d0; text-align: center; font-size: 11px; color: #333; padding: 0 4px; font-family: 'Consolas', monospace; white-space: nowrap; overflow: hidden; }
+        .fx-label { width: 30px; border-right: 1px solid #d0d0d0; text-align: center; font-size: 13px; color: #555; font-style: italic; display: flex; align-items: center; justify-content: center; }
+        #formula-input { flex-grow: 1; border: none; outline: none; padding: 0 8px; font-size: 11.5px; font-family: 'Consolas', monospace; color: #1a1a1a; }
+
+        /* 게임 영역 */
+        #game-container { flex-grow: 1; position: relative; background: white; overflow: hidden; }
+        #gameCanvas { display: block; }
+
+        /* 상태바 */
+        .status-bar { height: 22px; flex-shrink: 0; background: var(--excel-green); color: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 10.5px; }
+        .sb-left  { display: flex; gap: 14px; align-items: center; }
+        .sb-right { display: flex; gap: 14px; align-items: center; }
+        .sb-val { font-weight: 600; }
+        .sb-lbl { opacity: 0.7; }
+        .zoom-wrap { display: flex; align-items: center; gap: 5px; }
+        .zoom-track { width: 72px; height: 3px; background: rgba(255,255,255,0.35); border-radius: 2px; position: relative; }
+        .zoom-thumb { width: 8px; height: 8px; background: white; border-radius: 50%; position: absolute; top: -2.5px; left: 50%; transform: translateX(-50%); }
+
+        /* ════════════════════════════════
+           모달 공통
+        ════════════════════════════════ */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(210,210,210,0.88);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 3000; backdrop-filter: blur(1px);
+        }
+        .modal-overlay.hidden { display: none; }
+        .excel-modal { background: white; border: 1px solid #bbb; border-radius: 3px; box-shadow: 0 6px 28px rgba(0,0,0,0.2); overflow: hidden; }
+        .modal-head { background: var(--excel-green); color: white; padding: 9px 14px; font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .modal-foot { border-top: 1px solid #e8e8e8; padding: 10px 14px; display: flex; justify-content: flex-end; gap: 6px; background: #f8f8f8; }
+        .btn-ok { background: var(--excel-green); color: white; border: none; padding: 6px 20px; cursor: pointer; font-size: 11.5px; font-weight: 600; border-radius: 2px; }
+        .btn-ok:hover { background: var(--excel-green-dark); }
+        .btn-cancel { background: white; color: #333; border: 1px solid #ccc; padding: 6px 20px; cursor: pointer; font-size: 11.5px; border-radius: 2px; }
+        .btn-cancel:hover { background: #f0f0f0; }
+        .btn-prev { background: white; color: #333; border: 1px solid #ccc; padding: 6px 16px; cursor: pointer; font-size: 11.5px; border-radius: 2px; }
+        .btn-prev:hover { background: #f0f0f0; }
+
+        /* ════════════════════════════════
+           도움말 모달 (Step 1)
+        ════════════════════════════════ */
+        #help-modal .excel-modal { width: 580px; }
+        .help-body { padding: 18px 22px 14px; }
+        .help-body h3 { font-size: 13px; color: #1a1a1a; margin-bottom: 12px; border-bottom: 2px solid var(--excel-green); padding-bottom: 6px; }
+
+        .cell-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+        .cell-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            font-size: 10.5px;
+        }
+        .cell-card-head {
+            display: flex; align-items: center; gap: 7px;
+            padding: 5px 9px;
+            font-weight: 600; font-size: 11px;
+        }
+        .cell-card-head .badge {
+            font-family: 'Consolas', monospace;
+            font-size: 9.5px; padding: 1px 5px;
+            border-radius: 2px; white-space: nowrap;
+        }
+        .cell-card-body { padding: 5px 9px 7px; color: #555; line-height: 1.6; border-top: 1px solid #eee; }
+        .cell-card-body b { color: #333; }
+
+        /* 타입별 색상 */
+        .type-normal  { background: #f8f8f8; }
+        .type-normal  .cell-card-head { background: #f0f0f0; color: #444; }
+        .type-normal  .badge { background: #ddd; color: #555; }
+
+        .type-error   { background: #fff8f8; }
+        .type-error   .cell-card-head { background: #fff0f0; color: #b03030; }
+        .type-error   .badge { background: #ffd0d0; color: #b03030; }
+
+        .type-special { background: #fffdf0; }
+        .type-special .cell-card-head { background: #fffbe6; color: #9a6000; }
+        .type-special .badge { background: #ffe88a; color: #9a6000; }
+
+        .type-extend  { background: #f4fff7; }
+        .type-extend  .cell-card-head { background: #e8fff0; color: #1a7a40; }
+        .type-extend  .badge { background: #b0f0c8; color: #1a7a40; }
+
+        .type-frozen  { background: #f4f8ff; }
+        .type-frozen  .cell-card-head { background: #e8f0ff; color: #2855a0; }
+        .type-frozen  .badge { background: #b8d0f8; color: #2855a0; }
+
+        .type-bomb    { background: #fff8f4; }
+        .type-bomb    .cell-card-head { background: #fff0e8; color: #b04000; }
+        .type-bomb    .badge { background: #ffc898; color: #b04000; }
+
+        .type-multi   { background: #fdf4ff; }
+        .type-multi   .cell-card-head { background: #f8eeff; color: #7020c0; }
+        .type-multi   .badge { background: #d8b0f8; color: #7020c0; }
+
+        .type-merge   { background: #f0f9ff; }
+        .type-merge   .cell-card-head { background: #e0f4ff; color: #005090; }
+        .type-merge   .badge { background: #90d0f0; color: #005090; }
+
+        .help-tip {
+            background: #f0f8f0; border-left: 3px solid var(--excel-green);
+            padding: 7px 11px; font-size: 10.5px; color: #2a5a3a; line-height: 1.7;
+        }
+        .step-indicator { font-size: 10px; color: rgba(255,255,255,0.7); }
+
+        /* ════════════════════════════════
+           시작 모달 (Step 2)
+        ════════════════════════════════ */
+        #start-modal .excel-modal { width: 400px; }
+        .modal-body-inner { padding: 22px 26px 10px; }
+        .modal-body-inner h3 { font-size: 13.5px; margin-bottom: 8px; }
+        .modal-body-inner p  { font-size: 11px; color: #555; line-height: 1.7; }
+        .modal-warn { background: #fffce8; border: 1px solid #f0d060; padding: 8px 12px; font-size: 10.5px; color: #7a5500; margin: 10px 0; border-radius: 2px; }
+        .modal-tip  { background: #f0f8f0; border-left: 3px solid var(--excel-green); padding: 7px 10px; font-size: 10.5px; color: #2a5a3a; margin: 8px 0; }
+
+        /* 게임오버 */
+        #gameover-screen { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.82); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(1px); }
+        #gameover-screen.show { display: flex; }
+        .go-box { background: white; border: 1px solid #bbb; border-radius: 3px; box-shadow: 0 6px 24px rgba(0,0,0,0.18); width: 340px; overflow: hidden; }
+        .go-head { background: #a93226; color: white; padding: 9px 14px; font-size: 12px; font-weight: 600; }
+        .go-body { padding: 20px 24px; text-align: center; }
+        .go-body h3 { font-size: 14px; margin-bottom: 6px; }
+        .go-body p  { font-size: 11px; color: #666; margin: 3px 0; }
+        .go-score   { font-size: 30px; font-weight: 700; color: var(--excel-green); margin: 10px 0; }
+        .go-foot { border-top: 1px solid #e8e8e8; padding: 10px 14px; display: flex; justify-content: flex-end; gap: 6px; background: #f8f8f8; }
+
+        /* 토스트 */
+        .toast { position: absolute; left: 50%; transform: translateX(-50%); padding: 6px 20px; border-radius: 2px; font-size: 11.5px; font-weight: 600; color: white; opacity: 0; transition: opacity 0.25s; z-index: 50; pointer-events: none; white-space: nowrap; box-shadow: 0 3px 12px rgba(0,0,0,0.18); }
+        .toast.show { opacity: 1; }
+        #level-toast { top: 50px; background: var(--excel-green); }
+        #item-toast  { top: 88px; background: #2471a3; }
+        #boss-toast  { top: 50%; background: rgba(50,50,50,0.92); font-size: 13px; transform: translate(-50%,-50%); }
+
+        /* 속도 HUD */
+        #speed-hud { position: absolute; right: 10px; top: 28px; background: rgba(255,255,255,0.95); border: 1px solid #d8d8d8; border-radius: 2px; padding: 5px 9px; font-size: 9.5px; font-family: 'Consolas', monospace; color: #333; pointer-events: none; z-index: 40; line-height: 1.9; box-shadow: 0 2px 6px rgba(0,0,0,0.08); min-width: 130px; }
+        .hud-title { font-weight: 700; color: var(--excel-green); border-bottom: 1px solid #ececec; margin-bottom: 2px; padding-bottom: 2px; font-size: 9px; letter-spacing: 0.3px; }
+        .hud-row   { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .hud-bar-bg   { width: 60px; height: 5px; background: #ececec; border-radius: 3px; overflow: hidden; }
+        .hud-bar-fill { height: 100%; border-radius: 3px; background: var(--excel-green); transition: width 0.5s ease; }
+
+        /* 보스 오버레이 */
+        #boss-overlay { display: none; position: fixed; inset: 0; background: white; z-index: 9999; flex-direction: column; }
+        #boss-overlay.show { display: flex; }
+        .boss-taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 40px; background: #1e1e1e; display: flex; align-items: center; padding: 0 8px; gap: 4px; z-index: 10000; }
+        .boss-start { background: #0078d7; color: white; border: none; width: 40px; height: 30px; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .boss-task-btn { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.12); padding: 3px 12px; font-size: 11px; cursor: pointer; height: 30px; border-radius: 2px; display: flex; align-items: center; gap: 5px; }
+        .boss-task-btn.active { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+        .boss-tray { margin-left: auto; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.8); font-size: 11px; padding: 0 8px; }
+        .boss-fake-excel { flex-grow: 1; overflow: auto; padding-bottom: 40px; }
+        .boss-excel-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .boss-excel-table th { background: #f0f0f0; border: 1px solid #d0d0d0; padding: 3px 8px; text-align: center; font-weight: normal; min-width: 80px; color: #444; }
+        .boss-excel-table td { border: 1px solid #e0e0e0; padding: 3px 8px; text-align: right; color: #222; min-width: 80px; }
+        .boss-excel-table td.text-cell { text-align: left; }
+        .boss-excel-table tr:hover td { background: #f5fbff; }
+        .boss-excel-table tr.selected td { background: #cce0ff; }
+        .boss-title-bar { height: 32px; background: var(--excel-green); color: white; font-size: 12px; display: flex; align-items: center; padding: 0 12px; justify-content: space-between; flex-shrink: 0; }
+        .boss-ribbon-fake { height: 22px; background: #f8f8f8; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; padding: 0 8px; gap: 14px; font-size: 11px; color: #333; flex-shrink: 0; }
+        .boss-formula-fake { height: 24px; background: white; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; font-size: 11px; padding: 0 8px; gap: 8px; font-family: 'Consolas', monospace; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     STEP 1 : 도움말 모달
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="help-modal">
+    <div class="excel-modal">
+        <div class="modal-head">
+            <span>📋 셀 데이터 분석 가이드 — 전월 월매출 정리본_최최종_f.xls</span>
+            <span class="step-indicator">1 / 2</span>
+        </div>
+        <div class="help-body">
+            <h3>📊 셀 블록 유형 및 효과 안내</h3>
+            <div class="cell-grid">
+
+                <!-- 일반 -->
+                <div class="cell-card type-normal">
+                    <div class="cell-card-head">
+                        <span>일반 셀</span>
+                        <span class="badge">₩12,550</span>
+                    </div>
+                    <div class="cell-card-body">
+                        기본 매출 데이터 셀입니다.<br>
+                        <b>효과:</b> 없음 &nbsp;|&nbsp; <b>점수:</b> +100<br>
+                        <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 오류 -->
+                <div class="cell-card type-error">
+                    <div class="cell-card-head">
+                        <span>오류 셀</span>
+                        <span class="badge">#REF! / #N/A</span>
+                    </div>
+                    <div class="cell-card-body">
+                        수식 오류가 발생한 셀입니다.<br>
+                        <b>효과:</b> 없음 &nbsp;|&nbsp; <b>점수:</b> +200<br>
+                        <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 슈퍼볼 -->
+                <div class="cell-card type-special">
+                    <div class="cell-card-head">
+                        <span>오버플로우 셀</span>
+                        <span class="badge">#INF! / MAX()</span>
+                    </div>
+                    <div class="cell-card-body">
+                        값이 한계를 초과한 셀입니다.<br>
+                        <b>효과:</b> 🔥 슈퍼볼 — 벽돌을 관통하며 HP 무시<br>
+                        <b>점수:</b> +300 &nbsp;|&nbsp; <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 패들 확장 -->
+                <div class="cell-card type-extend">
+                    <div class="cell-card-head">
+                        <span>길이 조정 셀</span>
+                        <span class="badge">=LEN() / =TRIM()</span>
+                    </div>
+                    <div class="cell-card-body">
+                        문자열 처리 함수 셀입니다.<br>
+                        <b>효과:</b> 📏 패들 +15% 확장<br>
+                        <b>점수:</b> +150 &nbsp;|&nbsp; <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 냉동 -->
+                <div class="cell-card type-frozen">
+                    <div class="cell-card-head">
+                        <span>잠금 셀</span>
+                        <span class="badge">=LOCK() / =FREEZE</span>
+                    </div>
+                    <div class="cell-card-body">
+                        보호된 셀입니다. 여러 번 쳐야 해제됩니다.<br>
+                        <b>효과:</b> 없음 &nbsp;|&nbsp; <b>점수:</b> +250<br>
+                        <b>HP:</b> ❤️❤️ (2회) — HP 닷으로 표시
+                    </div>
+                </div>
+
+                <!-- 폭탄 -->
+                <div class="cell-card type-bomb">
+                    <div class="cell-card-head">
+                        <span>삭제 셀</span>
+                        <span class="badge">=BOOM() / DELETE!</span>
+                    </div>
+                    <div class="cell-card-body">
+                        데이터 삭제 매크로 셀입니다.<br>
+                        <b>효과:</b> 💥 주변 2칸 반경 셀 연쇄 폭발<br>
+                        <b>점수:</b> +500 &nbsp;|&nbsp; <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 멀티볼 -->
+                <div class="cell-card type-multi">
+                    <div class="cell-card-head">
+                        <span>분기 셀</span>
+                        <span class="badge">=SPLIT() / FORK()</span>
+                    </div>
+                    <div class="cell-card-body">
+                        데이터 분기 처리 셀입니다.<br>
+                        <b>효과:</b> ✨ 공이 3개로 분열 (최대 5개)<br>
+                        <b>점수:</b> +400 &nbsp;|&nbsp; <b>HP:</b> ❤️ (1회)
+                    </div>
+                </div>
+
+                <!-- 병합 -->
+                <div class="cell-card type-merge">
+                    <div class="cell-card-head">
+                        <span>병합 셀</span>
+                        <span class="badge">병합된 셀</span>
+                    </div>
+                    <div class="cell-card-body">
+                        2칸을 차지하는 강화 셀입니다.<br>
+                        <b>효과:</b> 없음 &nbsp;|&nbsp; <b>점수:</b> +600<br>
+                        <b>HP:</b> ❤️❤️❤️ (3회) — 가장 단단함
+                    </div>
+                </div>
+
+            </div><!-- /cell-grid -->
+
+            <div class="help-tip">
+                💡 <b>조작:</b> &nbsp;← → 방향키로 패들 이동 &nbsp;|&nbsp;
+                <b>ESC</b> = 보스 키 (상사 접근 시 즉시!) &nbsp;|&nbsp;
+                레벨업마다 공 속도가 단계적으로 빨라집니다.
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-ok" id="help-next-btn">다음 &nbsp;▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 2 : 시작 모달
+══════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="start-modal">
+    <div class="excel-modal">
+        <div class="modal-head">
+            <span>📊 Microsoft Excel — 파일 열기</span>
+            <span class="step-indicator">2 / 2</span>
+        </div>
+        <div class="modal-body-inner">
+            <h3>전월 월매출 정리본_최최종_f.xls</h3>
+            <p>이 파일은 <b>레거시 형식(.xls)</b>으로 저장되어 있습니다.<br>
+               일부 기능이 제한될 수 있습니다. 계속 진행하시겠습니까?</p>
+            <div class="modal-warn">
+                ⚠ 이 통합 문서에는 매크로가 포함되어 있습니다.<br>
+                보안 센터 설정에 따라 일부 기능이 제한될 수 있습니다.
+            </div>
+            <div class="modal-tip">
+                💡 <b>조작법:</b> ← → 방향키로 패들 이동<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ESC</b> = 보스 키 (상사가 오면 즉시!)
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-prev" id="back-to-help-btn">◀ 이전</button>
+            <button class="btn-ok" id="start-btn">작업 시작</button>
+        </div>
+    </div>
+</div>
+
+<!-- 보스 키 오버레이 -->
+<div id="boss-overlay">
+    <div class="boss-title-bar">
+        <span>📊 전월 월매출 정리본_최최종_f.xlsx — Excel</span>
+        <div style="display:flex;gap:1px;">
+            <div class="win-btn" style="color:white;">─</div>
+            <div class="win-btn" style="color:white;">□</div>
+            <div class="win-btn close" style="color:white;">✕</div>
+        </div>
+    </div>
+    <div class="boss-ribbon-fake">
+        <span style="font-weight:600;color:var(--excel-green);">홈</span>
+        <span>삽입</span><span>페이지 레이아웃</span><span>수식</span>
+        <span>데이터</span><span>검토</span><span>보기</span>
+    </div>
+    <div class="boss-formula-fake">
+        <span style="width:60px;border-right:1px solid #d0d0d0;text-align:center;color:#555;">D14</span>
+        <span style="color:#777;font-style:italic;border-right:1px solid #d0d0d0;padding-right:8px;">𝑓𝑥</span>
+        <span style="padding-left:4px;color:#333;">=SUMIF(B2:B200,"서울",D2:D200)</span>
+    </div>
+    <div class="boss-fake-excel">
+        <table class="boss-excel-table">
+            <thead>
+                <tr>
+                    <th style="width:28px;"></th>
+                    <th>A</th><th>B</th><th>C</th><th>D</th>
+                    <th>E</th><th>F</th><th>G</th><th>H</th><th>I</th>
+                </tr>
+            </thead>
+            <tbody id="boss-table-body"></tbody>
+        </table>
+    </div>
+    <div class="boss-taskbar">
+        <button class="boss-start">⊞</button>
+        <div class="boss-task-btn">🔍 검색</div>
+        <div class="boss-task-btn active">📊 전월 월매출 정리본_최최종_f.xlsx</div>
+        <div class="boss-task-btn">📧 Outlook</div>
+        <div class="boss-task-btn">💬 Teams</div>
+        <div class="boss-tray">
+            <span>🔊</span><span>🌐</span><span>🔋</span>
+            <span id="boss-time"></span>
+        </div>
+    </div>
+</div>
+
+<!-- 타이틀바 -->
+<div class="title-bar">
+    <div class="tb-left">
+        <span style="font-size:17px;">🟩</span>
+        <span class="qa-btn">💾</span>
+        <span class="qa-btn">↩</span>
+        <span class="qa-btn">↪</span>
+    </div>
+    <div class="tb-center">전월 월매출 정리본_최최종_f.xls - Excel</div>
+    <div class="tb-right">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close">✕</div>
+    </div>
+</div>
+
+<!-- 리본 탭 -->
+<div class="ribbon-tabs">
+    <div class="tab active">홈</div>
+    <div class="tab">삽입</div>
+    <div class="tab">페이지 레이아웃</div>
+    <div class="tab">수식</div>
+    <div class="tab">데이터</div>
+    <div class="tab">검토</div>
+    <div class="tab">보기</div>
+</div>
+
+<!-- 리본 본문 -->
+<div class="ribbon-body">
+    <div class="rg">
+        <div class="rg-btns">
+            <div class="rb"><span class="ico">📋</span>붙여넣기</div>
+            <div class="vdiv"></div>
+            <div class="rb-col">
+                <div class="rb rb-sm"><span class="ico">✂</span>잘라내기</div>
+                <div class="rb rb-sm"><span class="ico">📄</span>복사</div>
+                <div class="rb rb-sm"><span class="ico">🖌</span>서식 복사</div>
+            </div>
+        </div>
+        <div class="rg-label">클립보드</div>
+    </div>
+    <div class="rg">
+        <div class="fcol">
+            <div class="frow">
+                <select class="fsel" style="width:88px;"><option>맑은 고딕</option></select>
+                <select class="fsel" style="width:34px;"><option>11</option></select>
+            </div>
+            <div class="frow">
+                <button class="fb" style="font-weight:900;">B</button>
+                <button class="fb" style="font-style:italic;">I</button>
+                <button class="fb" style="text-decoration:underline;">U</button>
+                <div class="vdiv"></div>
+                <button class="fb">⊞</button>
+                <button class="fb" style="color:#c00;">A</button>
+                <button class="fb">🎨</button>
+            </div>
+        </div>
+        <div class="rg-label">글꼴</div>
+    </div>
+    <div class="rg">
+        <div class="fcol">
+            <div class="frow">
+                <button class="fb">⬆</button><button class="fb">⬇</button>
+                <button class="fb">↩</button><button class="fb">⇥</button>
+            </div>
+            <div class="frow">
+                <button class="fb">≡</button><button class="fb">☰</button>
+                <button class="fb">≣</button><button class="fb">📐</button>
+            </div>
+        </div>
+        <div class="rg-label">맞춤</div>
+    </div>
+    <div class="rg">
+        <div class="fcol">
+            <select class="fsel" style="width:108px;"><option>통화</option><option>숫자</option><option>백분율</option><option>날짜</option></select>
+            <div class="frow" style="margin-top:3px;">
+                <button class="fb">%</button>
+                <button class="fb">,</button>
+                <button class="fb" style="font-size:9px;">.0→</button>
+                <button class="fb" style="font-size:9px;">←.0</button>
+            </div>
+        </div>
+        <div class="rg-label">표시 형식</div>
+    </div>
+    <div class="rg">
+        <div class="rg-btns">
+            <div class="rb"><span class="ico">🗂</span>조건부<br>서식</div>
+            <div class="rb"><span class="ico">📊</span>표<br>서식</div>
+            <div class="rb"><span class="ico">🎨</span>셀<br>스타일</div>
+        </div>
+        <div class="rg-label">스타일</div>
+    </div>
+    <div class="rg">
+        <div class="rb-col">
+            <div class="rb rb-sm"><span class="ico">➕</span>삽입▾</div>
+            <div class="rb rb-sm"><span class="ico">➖</span>삭제▾</div>
+            <div class="rb rb-sm"><span class="ico">📝</span>서식▾</div>
+        </div>
+        <div class="rg-label">셀</div>
+    </div>
+    <div class="rg">
+        <div class="rg-btns">
+            <div class="rb"><span class="ico" style="font-weight:700;">Σ</span>자동<br>합계</div>
+            <div class="rb-col">
+                <div class="rb rb-sm"><span class="ico">🔽</span>채우기</div>
+                <div class="rb rb-sm"><span class="ico">🗑</span>지우기</div>
+                <div class="rb rb-sm"><span class="ico">🔍</span>정렬/필터</div>
+            </div>
+        </div>
+        <div class="rg-label">편집</div>
+    </div>
+</div>
+
+<!-- 수식바 -->
+<div class="formula-bar">
+    <div class="name-box" id="name-box">A1</div>
+    <div class="fx-label">𝑓𝑥</div>
+    <input type="text" id="formula-input" readonly value="=VLOOKUP(A1,매출DB!A:Z,3,FALSE)">
+</div>
+
+<!-- 게임 영역 -->
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="gameover-screen">
+        <div class="go-box">
+            <div class="go-head">🛑 런타임 오류 — Microsoft Excel</div>
+            <div class="go-body">
+                <div style="font-size:38px;margin-bottom:8px;">💀</div>
+                <h3>데이터 분석이 강제 종료되었습니다</h3>
+                <p>미결 셀이 모두 손실되었습니다.</p>
+                <div class="go-score" id="final-score">₩0</div>
+                <p id="final-stats" style="color:#888;font-size:11px;">레벨 1 · 파괴 0개</p>
+            </div>
+            <div class="go-foot">
+                <button class="btn-cancel" onclick="location.reload()">닫기</button>
+                <button class="btn-ok"    onclick="location.reload()">📊 재분석 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="level-toast"></div>
+    <div class="toast" id="item-toast"></div>
+    <div class="toast" id="boss-toast">ESC를 다시 누르면 복귀합니다</div>
+
+    <div id="speed-hud">
+        <div class="hud-title">📈 PROCESSING SPEED</div>
+        <div class="hud-row">
+            <span>BALL</span>
+            <div class="hud-bar-bg"><div class="hud-bar-fill" id="hud-ball-bar" style="width:15%;"></div></div>
+            <span id="hud-ball-val">2.0</span>
+        </div>
+        <div class="hud-row">
+            <span>SCROLL</span>
+            <div class="hud-bar-bg"><div class="hud-bar-fill" id="hud-scroll-bar" style="width:5%;background:#2471a3;"></div></div>
+            <span id="hud-scroll-val">0.006</span>
+        </div>
+        <div class="hud-row">
+            <span>LEVEL</span>
+            <span id="hud-level-val" style="font-weight:700;color:var(--excel-green);">Lv.1</span>
+        </div>
+    </div>
+</div>
+
+<!-- 상태바 -->
+<div class="status-bar">
+    <div class="sb-left">
+        <span id="sb-mode"><span class="sb-lbl">상태: </span><span class="sb-val">준비</span></span>
+        <span><span class="sb-lbl">셀: </span><span class="sb-val" id="sb-cell">A1</span></span>
+        <span><span class="sb-lbl">합계: </span><span class="sb-val" id="sb-sum">0</span></span>
+        <span><span class="sb-lbl">평균: </span><span class="sb-val" id="sb-avg">0</span></span>
+        <span><span class="sb-lbl">개수: </span><span class="sb-val" id="sb-count">0</span></span>
+    </div>
+    <div class="sb-right">
+        <span id="sb-score">점수: 0</span>
+        <span id="sb-level">레벨: 1</span>
+        <span id="sb-lives">❤️❤️❤️</span>
+        <div class="zoom-wrap">
+            <span style="opacity:.7;font-size:10px;">─</span>
+            <div class="zoom-track"><div class="zoom-thumb"></div></div>
+            <span style="opacity:.7;font-size:10px;">+</span>
+            <span>100%</span>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   모달 단계 전환
+══════════════════════════════════════ */
+document.getElementById('help-next-btn').addEventListener('click', () => {
+    document.getElementById('help-modal').classList.add('hidden');
+    document.getElementById('start-modal').classList.remove('hidden');
+});
+document.getElementById('back-to-help-btn').addEventListener('click', () => {
+    document.getElementById('start-modal').classList.add('hidden');
+    document.getElementById('help-modal').classList.remove('hidden');
+});
+
+/* ══════════════════════════════════════
+   상수
+══════════════════════════════════════ */
+const COL_W  = 46;
+const ROW_H  = 22;
+const CELL_W = 100;
+const CELL_H = 22;
+const BALL_R = 6;
+
+const INIT_BALL_SPEED   = 2.0;
+const SPEED_PER_LEVEL   = 0.5;
+const MAX_BALL_SPEED    = 9.0;
+const INIT_DESCENT      = 0.006;
+const DESCENT_PER_LEVEL = 0.0015;
+const LEVEL_SCORE_STEP  = 2500;
+
+/* ══════════════════════════════════════
+   보스 테이블
+══════════════════════════════════════ */
+(function buildBossTable() {
+    const regions  = ['서울','부산','대구','인천','광주','대전','울산','수원','창원','제주'];
+    const products = ['노트북','모니터','키보드','마우스','헤드셋','웹캠','USB허브','SSD','태블릿','프린터'];
+    const body = document.getElementById('boss-table-body');
+    const htr  = document.createElement('tr');
+    htr.innerHTML =
+        `<td style="background:#f0f0f0;text-align:center;color:#888;border:1px solid #d0d0d0;font-size:10px;">1</td>` +
+        ['지역','제품명','수량','매출액','원가','이익','이익률','담당자','비고'].map(
+            h => `<td style="background:#dce8d4;font-weight:600;text-align:center;">${h}</td>`
+        ).join('');
+    body.appendChild(htr);
+    for (let i = 2; i <= 32; i++) {
+        const qty    = Math.floor(Math.random()*200)+10;
+        const price  = Math.floor(Math.random()*800000)+50000;
+        const cost   = Math.floor(price*(0.5+Math.random()*0.3));
+        const profit = price - cost;
+        const rate   = ((profit/price)*100).toFixed(1);
+        const tr = document.createElement('tr');
+        if (i === 14) tr.classList.add('selected');
+        tr.innerHTML =
+            `<td style="background:#f0f0f0;text-align:center;color:#888;border:1px solid #d0d0d0;font-size:10px;">${i}</td>` +
+            `<td class="text-cell">${regions[i%regions.length]}</td>` +
+            `<td class="text-cell">${products[i%products.length]}</td>` +
+            `<td>${qty.toLocaleString()}</td>` +
+            `<td>₩${price.toLocaleString()}</td>` +
+            `<td>₩${cost.toLocaleString()}</td>` +
+            `<td style="color:${profit>0?'#217346':'#c0392b'}">₩${profit.toLocaleString()}</td>` +
+            `<td style="color:${parseFloat(rate)>20?'#217346':'#c0392b'}">${rate}%</td>` +
+            `<td class="text-cell">담당자${i}</td>` +
+            `<td class="text-cell">${Math.random()>0.7?'검토 필요':''}</td>`;
+        body.appendChild(tr);
+    }
+})();
+
+/* ══════════════════════════════════════
+   보스 키
+══════════════════════════════════════ */
+let bossMode = false;
+(function tickClock() {
+    const el = document.getElementById('boss-time');
+    if (el) {
+        const n = new Date();
+        el.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+    }
+    setTimeout(tickClock, 1000);
+})();
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        bossMode = !bossMode;
+        document.getElementById('boss-overlay').classList.toggle('show', bossMode);
+        if (bossMode) showToast('boss-toast','ESC를 다시 누르면 복귀합니다', 0);
+        else          hideToast('boss-toast');
+    }
+});
+
+/* ══════════════════════════════════════
+   게임 상태
+══════════════════════════════════════ */
+const canvas = document.getElementById('gameCanvas');
+const ctx    = canvas.getContext('2d');
+const gc     = document.getElementById('game-container');
+
+let gameStarted=false, score=0, level=1, lives=3, bricksDestroyed=0;
+let paddleW=120, paddleX=200, brickOffsetTop=0;
+let curDescent=INIT_DESCENT;
+let isSuperBall=false, superTimer=0;
+let balls=[], bricks=[], popups=[];
+let selectedCol=-1, formulaTick=0;
+const PADDLE_H = 10;
+
+const TYPES = {
+    normal:  { bg:null,      fg:'#444',    bd:'#ddd',    pts:100, hp:1 },
+    error:   { bg:'#fff2f2', fg:'#b03030', bd:'#e8b8b8', pts:200, hp:1 },
+    special: { bg:'#fffbe6', fg:'#b07000', bd:'#e8d070', pts:300, hp:1, fx:'super'  },
+    extend:  { bg:'#f0fff4', fg:'#1a7a40', bd:'#90d4a8', pts:150, hp:1, fx:'extend' },
+    frozen:  { bg:'#eef4ff', fg:'#2855a0', bd:'#a0b8e8', pts:250, hp:2 },
+    bomb:    { bg:'#fff2ea', fg:'#b04000', bd:'#e8a878', pts:500, hp:1, fx:'bomb'   },
+    multi:   { bg:'#f6eeff', fg:'#7020c0', bd:'#c898f0', pts:400, hp:1, fx:'multi'  },
+    merge:   { bg:'#e8f6ff', fg:'#0060a0', bd:'#70b8e0', pts:600, hp:3, span:2      },
+};
+const VALS = {
+    normal:  ['₩3,842','₩12,550','₩8,903','₩4,210','₩6,780','₩21,450','₩9,300','₩1,820','₩33,100','₩7,640'],
+    error:   ['#DIV/0!','#REF!','#NULL!','#N/A','#NAME?','#NUM!','#VALUE!'],
+    special: ['#INF!','∞ INF','MAX()','OVERFLOW'],
+    extend:  ['=LEN(A1)','=TRIM()','=PAD()','=FIT(B2)','=REPT()'],
+    frozen:  ['=LOCK()','=FREEZE','FIXED()','=IFERROR(','=ISBLANK'],
+    bomb:    ['=BOOM()','KABOOM!','=BLAST()','DELETE!','=REMOVE'],
+    multi:   ['=SPLIT()','=MULTI()','×3 BALL','FORK()','=BRANCH'],
+    merge:   ['병합된 셀','=MERGE(A:B)','MERGED CELL'],
+};
+const FORMULAS = [
+    '=VLOOKUP(A1,전월매출!A:Z,3,FALSE)',
+    '=SUMIF(B:B,"서울",C:C)',
+    '=IFERROR(VLOOKUP(K2,상품목록!A:D,4,0),"미등록")',
+    '=INDEX(전월매출!C:C,MATCH(MAX(전월매출!C:C),전월매출!C:C,0))',
+    '=SUMPRODUCT((B2:B100="Q1")*(C2:C100))',
+    '=TEXT(TODAY(),"yyyy-mm-dd")&" 기준 매출"',
+    '=COUNTIF(D:D,">="&E1)',
+    '=AVERAGEIFS(F:F,A:A,"서울",B:B,"2025")',
+    '=IF(AND(B2>0,C2<>0),B2/C2,"오류")',
+    '=RANK(C2,C$2:C$200,0)',
+    '=NETWORKDAYS(B2,C2)',
+    '=OFFSET(A1,ROW()-1,0,1,1)',
+];
+
+/* ══════════════════════════════════════
+   리사이즈
+══════════════════════════════════════ */
+window.addEventListener('load',   resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() {
+    canvas.width  = gc.clientWidth;
+    canvas.height = gc.clientHeight;
+    if (!gameStarted) drawGrid(0);
+}
+
+/* ══════════════════════════════════════
+   시작
+══════════════════════════════════════ */
+document.getElementById('start-btn').addEventListener('click', () => {
+    document.getElementById('start-modal').classList.add('hidden');
+    initGame();
+});
+
+function initGame() {
+    gameStarted=true; score=0; level=1; lives=3; bricksDestroyed=0;
+    curDescent=INIT_DESCENT; paddleW=120;
+    paddleX = COL_W + (canvas.width-COL_W)/2 - paddleW/2;
+    isSuperBall=false; superTimer=0; popups=[]; bricks=[];
+    balls = [{
+        x: paddleX+paddleW/2, y: canvas.height-80,
+        dx: INIT_BALL_SPEED*(Math.random()>0.5?1:-1),
+        dy: -INIT_BALL_SPEED,
+    }];
+    for (let r=0; r<8; r++) bricks.push(createRow(r*CELL_H));
+    updateUI();
+    requestAnimationFrame(loop);
+}
+
+/* ══════════════════════════════════════
+   벽돌 생성
+══════════════════════════════════════ */
+function createRow(y) {
+    const cols = Math.floor((canvas.width-COL_W)/CELL_W);
+    const row=[]; let c=0;
+    while (c < cols) {
+        const r=Math.random();
+        const type = r<.03?'merge':r<.06?'bomb':r<.09?'multi':r<.14?'special':r<.20?'extend':r<.26?'frozen':r<.34?'error':'normal';
+        const def=TYPES[type], span=(type==='merge'&&c+2<=cols)?2:1;
+        row.push({ x:COL_W+c*CELL_W, y, w:CELL_W*span, type, span,
+            val:VALS[type][Math.floor(Math.random()*VALS[type].length)],
+            hp:def.hp, maxHp:def.hp, status:1 });
+        c+=span;
+    }
+    return row;
+}
+
+/* ══════════════════════════════════════
+   키 입력
+══════════════════════════════════════ */
+const keys={left:false,right:false};
+document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowLeft') {keys.left=true;  e.preventDefault();}
+    if(e.key==='ArrowRight'){keys.right=true; e.preventDefault();}
+});
+document.addEventListener('keyup', e=>{
+    if(e.key==='ArrowLeft')  keys.left=false;
+    if(e.key==='ArrowRight') keys.right=false;
+});
+
+/* ══════════════════════════════════════
+   그리드 그리기
+══════════════════════════════════════ */
+function drawGrid(offsetY) {
+    ctx.fillStyle='#fff';
+    ctx.fillRect(COL_W,ROW_H,canvas.width-COL_W,canvas.height-ROW_H);
+    if(selectedCol>=0){
+        ctx.fillStyle='rgba(33,115,70,0.06)';
+        ctx.fillRect(COL_W+selectedCol*CELL_W,ROW_H,CELL_W,canvas.height-ROW_H);
+    }
+    ctx.strokeStyle='#e8e8e8'; ctx.lineWidth=0.5;
+    const colsN=Math.ceil((canvas.width-COL_W)/CELL_W)+1;
+    const rowsN=Math.ceil((canvas.height-ROW_H)/CELL_H)+2;
+    for(let i=0;i<=colsN;i++){
+        const x=COL_W+i*CELL_W;
+        ctx.beginPath();ctx.moveTo(x,ROW_H);ctx.lineTo(x,canvas.height);ctx.stroke();
+    }
+    for(let j=0;j<=rowsN;j++){
+        const y=ROW_H+((j*CELL_H+offsetY%CELL_H+CELL_H)%(canvas.height-ROW_H));
+        ctx.beginPath();ctx.moveTo(COL_W,y);ctx.lineTo(canvas.width,y);ctx.stroke();
+    }
+    ctx.fillStyle='#f0f0f0'; ctx.fillRect(0,0,canvas.width,ROW_H);
+    ctx.fillStyle='#f0f0f0'; ctx.fillRect(0,0,COL_W,canvas.height);
+    if(selectedCol>=0){
+        ctx.fillStyle='#217346';
+        ctx.fillRect(COL_W+selectedCol*CELL_W,0,CELL_W,ROW_H);
+    }
+    ctx.font='11px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    for(let i=0;i<colsN;i++){
+        const x=COL_W+i*CELL_W;
+        ctx.fillStyle=(selectedCol===i)?'#fff':'#444';
+        ctx.fillText(colLabel(i),x+CELL_W/2,ROW_H/2);
+        ctx.strokeStyle='#c8c8c8'; ctx.lineWidth=0.5;
+        ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ROW_H);ctx.stroke();
+    }
+    ctx.font='10px Arial'; ctx.textAlign='right'; ctx.fillStyle='#888';
+    for(let j=0;j<=rowsN;j++){
+        const y=ROW_H+((j*CELL_H+offsetY%CELL_H+CELL_H)%(canvas.height-ROW_H));
+        const rowNum=Math.floor(brickOffsetTop/CELL_H+j)+1;
+        if(y>ROW_H){
+            ctx.fillText(rowNum,COL_W-4,y+CELL_H/2);
+            ctx.strokeStyle='#d8d8d8'; ctx.lineWidth=0.5;
+            ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(COL_W,y);ctx.stroke();
+        }
+    }
+    ctx.strokeStyle='#c0c0c0'; ctx.lineWidth=1;
+    ctx.strokeRect(0,0,COL_W,canvas.height);
+    ctx.strokeRect(0,0,canvas.width,ROW_H);
+    ctx.fillStyle='#e4e4e4'; ctx.fillRect(0,0,COL_W,ROW_H);
+    ctx.strokeStyle='#b0b0b0'; ctx.lineWidth=1;
+    ctx.strokeRect(0,0,COL_W,ROW_H);
+}
+function colLabel(i){
+    let s='';i++;
+    while(i>0){s=String.fromCharCode(64+(i%26||26))+s;i=Math.floor((i-1)/26);}
+    return s;
+}
+
+/* ══════════════════════════════════════
+   벽돌 그리기
+══════════════════════════════════════ */
+function drawBricks() {
+    bricks.forEach((row,r)=>{
+        const bY=ROW_H+(r-1)*CELL_H+brickOffsetTop;
+        if(bY+CELL_H<ROW_H||bY>canvas.height) return;
+        row.forEach(b=>{
+            if(b.status!==1) return;
+            const def=TYPES[b.type];
+            if(def.bg){ctx.fillStyle=def.bg;ctx.fillRect(b.x+.5,bY+.5,b.w-1,CELL_H-1);}
+            if(b.maxHp>1){
+                ctx.fillStyle=`rgba(33,115,70,${0.15*(b.maxHp-b.hp+1)})`;
+                ctx.fillRect(b.x+.5,bY+.5,(b.w-1)*(b.hp/b.maxHp),CELL_H-1);
+            }
+            ctx.strokeStyle=def.bd; ctx.lineWidth=1;
+            ctx.strokeRect(b.x+.5,bY+.5,b.w-1,CELL_H-1);
+            ctx.fillStyle=def.fg;
+            ctx.font=(b.type==='merge'?'bold ':'')+' 10.5px Consolas,monospace';
+            ctx.textAlign=(b.type==='normal')?'right':'left';
+            ctx.textBaseline='middle';
+            ctx.fillText(b.val,(b.type==='normal')?b.x+b.w-5:b.x+5,bY+CELL_H/2);
+            if(b.maxHp>1){
+                for(let h=0;h<b.maxHp;h++){
+                    ctx.fillStyle=h<b.hp?def.fg:'rgba(0,0,0,0.12)';
+                    ctx.beginPath();ctx.arc(b.x+b.w-8-h*8,bY+CELL_H-5,2.5,0,Math.PI*2);ctx.fill();
+                }
+            }
+        });
+    });
+}
+
+/* ══════════════════════════════════════
+   패들 그리기
+══════════════════════════════════════ */
+function drawPaddle() {
+    const pY=canvas.height-36;
+    ctx.fillStyle='rgba(33,115,70,0.10)';ctx.fillRect(paddleX,pY-2,paddleW,CELL_H+4);
+    const g=ctx.createLinearGradient(paddleX,pY,paddleX,pY+PADDLE_H);
+    g.addColorStop(0,'#2ea05e');g.addColorStop(1,'#186030');
+    ctx.fillStyle=g;ctx.fillRect(paddleX,pY,paddleW,PADDLE_H);
+    ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillRect(paddleX,pY,paddleW,2);
+    ctx.strokeStyle='#217346';ctx.lineWidth=1.5;
+    ctx.strokeRect(paddleX-.5,pY-2,paddleW+1,CELL_H+4);
+    [[paddleX-2,pY-2],[paddleX+paddleW-3,pY-2],
+     [paddleX-2,pY+CELL_H+2],[paddleX+paddleW-3,pY+CELL_H+2]].forEach(([hx,hy])=>{
+        ctx.fillStyle='#217346';ctx.fillRect(hx,hy,5,5);
+    });
+    ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 9px Consolas';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('=PADDLE()',paddleX+paddleW/2,pY+PADDLE_H/2);
+}
+
+/* ══════════════════════════════════════
+   공 그리기
+══════════════════════════════════════ */
+function drawBalls() {
+    balls.forEach(ball=>{
+        ctx.fillStyle=isSuperBall?'rgba(220,60,40,0.10)':'rgba(40,40,40,0.07)';
+        ctx.beginPath();ctx.arc(ball.x-ball.dx*3,ball.y-ball.dy*3,BALL_R,0,Math.PI*2);ctx.fill();
+        const g=ctx.createRadialGradient(ball.x-2,ball.y-2,1,ball.x,ball.y,BALL_R);
+        if(isSuperBall){g.addColorStop(0,'#ff8060');g.addColorStop(1,'#b03020');}
+        else{g.addColorStop(0,'#ffffff');g.addColorStop(1,'#404040');}
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,0.55)';
+        ctx.beginPath();ctx.arc(ball.x-2,ball.y-2,2,0,Math.PI*2);ctx.fill();
+    });
+}
+
+/* ══════════════════════════════════════
+   팝업
+══════════════════════════════════════ */
+function drawPopups(){
+    popups=popups.filter(p=>p.life>0);
+    popups.forEach(p=>{
+        ctx.globalAlpha=Math.min(1,p.life/40);
+        ctx.fillStyle=p.color;ctx.font=`bold ${p.size}px Arial`;
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(p.text,p.x,p.y);
+        p.y-=0.9;p.life--;
+    });
+    ctx.globalAlpha=1;
+}
+function addPopup(x,y,text,color='#217346',size=12){
+    popups.push({x,y,text,color,size,life:55});
+}
+
+/* ══════════════════════════════════════
+   아이템 효과
+══════════════════════════════════════ */
+function applyFx(b,bY){
+    const fx=TYPES[b.type].fx; if(!fx) return;
+    if(fx==='super'){
+        isSuperBall=true;superTimer=360;
+        showToast('item-toast','🔥 슈퍼볼 활성화! — #INF 모드');
+    } else if(fx==='extend'){
+        paddleW=Math.min(paddleW*1.15,220);
+        showToast('item-toast','📏 패들 +15% 확장');
+    } else if(fx==='bomb'){
+        let n=0;
+        bricks.forEach((row,ri)=>{
+            const by=ROW_H+(ri-1)*CELL_H+brickOffsetTop;
+            row.forEach(nb=>{
+                if(nb.status===1&&Math.abs(nb.x-b.x)<=CELL_W*2&&Math.abs(by-bY)<=CELL_H*2){
+                    nb.status=0;score+=TYPES[nb.type].pts;n++;
+                }
+            });
+        });
+        addPopup(b.x+b.w/2,bY,`💥 ×${n}`,'#b03000',16);
+        showToast('item-toast',`💥 폭발! 주변 ${n}개 파괴`);
+    } else if(fx==='multi'){
+        if(balls.length<5){
+            const o=balls[0];
+            balls.push({x:o.x,y:o.y,dx:-o.dx,dy:o.dy});
+            balls.push({x:o.x,y:o.y,dx:o.dx*0.7,dy:o.dy*-1.2});
+            showToast('item-toast','✨ 멀티볼! 공 ×3');
+        }
+    }
+}
+
+/* ══════════════════════════════════════
+   충돌
+══════════════════════════════════════ */
+function collideBricks(ball){
+    for(let r=0;r<bricks.length;r++){
+        const bY=ROW_H+(r-1)*CELL_H+brickOffsetTop;
+        if(bY>canvas.height||bY+CELL_H<0) continue;
+        for(const b of bricks[r]){
+            if(b.status!==1) continue;
+            if(ball.x+BALL_R>b.x&&ball.x-BALL_R<b.x+b.w&&
+               ball.y+BALL_R>bY &&ball.y-BALL_R<bY+CELL_H){
+                b.hp--;
+                if(b.hp<=0){
+                    b.status=0;score+=TYPES[b.type].pts*level;bricksDestroyed++;
+                    addPopup(b.x+b.w/2,bY,`+${TYPES[b.type].pts*level}`,TYPES[b.type].fg);
+                    applyFx(b,bY);
+                } else addPopup(b.x+b.w/2,bY,`HP:${b.hp}`,'#888');
+                if(!isSuperBall){
+                    if(Math.abs(ball.x-(b.x+b.w/2))>b.w*0.3) ball.dx=-ball.dx;
+                    else ball.dy=-ball.dy;
+                }
+                return;
+            }
+        }
+    }
+}
+
+/* ══════════════════════════════════════
+   레벨업
+══════════════════════════════════════ */
+function checkLevel(){
+    if(score>=level*LEVEL_SCORE_STEP){
+        level++; curDescent+=DESCENT_PER_LEVEL;
+        balls.forEach(ball=>{
+            const spd=Math.sqrt(ball.dx**2+ball.dy**2);
+            const ns=Math.min(spd+SPEED_PER_LEVEL,MAX_BALL_SPEED);
+            ball.dx*=ns/spd; ball.dy*=ns/spd;
+        });
+        showToast('level-toast',`📈 레벨 ${level} 달성 — 공 속도 +${SPEED_PER_LEVEL.toFixed(1)}`);
+        updateHUD();
+    }
+}
+
+/* ══════════════════════════════════════
+   토스트
+══════════════════════════════════════ */
+const toastTimers={};
+function showToast(id,msg,duration=2200){
+    const el=document.getElementById(id);
+    el.textContent=msg;el.classList.add('show');
+    if(duration>0){clearTimeout(toastTimers[id]);toastTimers[id]=setTimeout(()=>el.classList.remove('show'),duration);}
+}
+function hideToast(id){document.getElementById(id).classList.remove('show');}
+
+/* ══════════════════════════════════════
+   HUD
+══════════════════════════════════════ */
+function updateHUD(){
+    if(!gameStarted||balls.length===0) return;
+    const spd=Math.sqrt(balls[0].dx**2+balls[0].dy**2);
+    document.getElementById('hud-ball-bar').style.width=Math.min(100,(spd/MAX_BALL_SPEED)*100)+'%';
+    document.getElementById('hud-scroll-bar').style.width=Math.min(100,(curDescent/0.05)*100)+'%';
+    document.getElementById('hud-ball-val').textContent=spd.toFixed(1);
+    document.getElementById('hud-scroll-val').textContent=curDescent.toFixed(4);
+    document.getElementById('hud-level-val').textContent=`Lv.${level}`;
+}
+
+/* ══════════════════════════════════════
+   UI
+══════════════════════════════════════ */
+function updateFormulaBar(){
+    formulaTick++;
+    if(formulaTick%110===0)
+        document.getElementById('formula-input').value=FORMULAS[Math.floor(Math.random()*FORMULAS.length)];
+    if(balls.length>0){
+        const col=Math.max(0,Math.floor((balls[0].x-COL_W)/CELL_W));
+        const row=Math.max(1,Math.floor((balls[0].y-ROW_H)/CELL_H)+1);
+        const ref=colLabel(col)+row;
+        document.getElementById('name-box').textContent=ref;
+        document.getElementById('sb-cell').textContent=ref;
+        selectedCol=col;
+    }
+}
+function updateUI(){
+    document.getElementById('sb-score').textContent=`점수: ${score.toLocaleString()}`;
+    document.getElementById('sb-level').textContent=`레벨: ${level}`;
+    document.getElementById('sb-lives').textContent='❤️'.repeat(lives)+'🖤'.repeat(Math.max(0,3-lives));
+    document.getElementById('sb-sum').textContent=score.toLocaleString();
+    document.getElementById('sb-avg').textContent=bricksDestroyed>0?Math.round(score/bricksDestroyed):0;
+    document.getElementById('sb-count').textContent=bricksDestroyed;
+    document.getElementById('sb-mode').innerHTML=`<span class="sb-lbl">상태: </span><span class="sb-val">${gameStarted?'편집 중':'준비'}</span>`;
+}
+
+/* ══════════════════════════════════════
+   슈퍼볼 게이지
+══════════════════════════════════════ */
+function drawSuperGauge(){
+    if(!isSuperBall) return;
+    const gw=90*(superTimer/360);
+    ctx.fillStyle='rgba(200,50,30,0.75)';ctx.fillRect(COL_W+8,ROW_H+4,gw,5);
+    ctx.strokeStyle='#b03020';ctx.lineWidth=1;ctx.strokeRect(COL_W+8,ROW_H+4,90,5);
+    ctx.fillStyle='#b03020';ctx.font='9px Arial';
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText('🔥SUPER',COL_W+103,ROW_H+7);
+}
+
+/* ══════════════════════════════════════
+   게임오버
+══════════════════════════════════════ */
+function gameOver(){
+    gameStarted=false;
+    document.getElementById('final-score').textContent=`₩${score.toLocaleString()}`;
+    document.getElementById('final-stats').textContent=`레벨 ${level} · 파괴 ${bricksDestroyed}개`;
+    document.getElementById('gameover-screen').classList.add('show');
+}
+
+/* ══════════════════════════════════════
+   메인 루프
+══════════════════════════════════════ */
+function loop(){
+    if(!gameStarted) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    brickOffsetTop+=curDescent;
+    if(brickOffsetTop>=CELL_H){
+        brickOffsetTop-=CELL_H;
+        bricks.unshift(createRow(0));
+        if(bricks.length>45) bricks.pop();
+    }
+    drawGrid(brickOffsetTop);
+    drawBricks();
+    const SPD=9;
+    if(keys.right) paddleX+=SPD;
+    if(keys.left)  paddleX-=SPD;
+    paddleX=Math.max(COL_W,Math.min(paddleX,canvas.width-paddleW));
+    drawPaddle();
+    const pY=canvas.height-36;
+    for(let i=balls.length-1;i>=0;i--){
+        const ball=balls[i];
+        collideBricks(ball);
+        if(ball.x+ball.dx>canvas.width-BALL_R) ball.dx=-Math.abs(ball.dx);
+        if(ball.x+ball.dx<COL_W+BALL_R)        ball.dx= Math.abs(ball.dx);
+        if(ball.y+ball.dy<ROW_H+BALL_R)        ball.dy= Math.abs(ball.dy);
+        if(ball.dy>0&&
+           ball.y+ball.dy>=pY&&
+           ball.y+ball.dy<=pY+PADDLE_H+BALL_R&&
+           ball.x>=paddleX-BALL_R&&
+           ball.x<=paddleX+paddleW+BALL_R){
+            const hit=(ball.x-paddleX)/paddleW;
+            const angle=(hit-0.5)*2.2;
+            const spd=Math.sqrt(ball.dx**2+ball.dy**2);
+            ball.dx=spd*Math.sin(angle);
+            ball.dy=-Math.abs(spd*Math.cos(angle));
+        }
+        if(ball.y>canvas.height+20){balls.splice(i,1);continue;}
+        ball.x+=ball.dx; ball.y+=ball.dy;
+    }
+    if(balls.length===0){
+        lives--;updateUI();
+        if(lives<=0){drawBalls();gameOver();return;}
+        balls.push({x:paddleX+paddleW/2,y:canvas.height-80,
+            dx:INIT_BALL_SPEED*(Math.random()>0.5?1:-1),dy:-INIT_BALL_SPEED});
+        showToast('item-toast',`💔 목숨 -1  남은 목숨: ${lives}`);
+    }
+    drawBalls();
+    drawSuperGauge();
+    if(isSuperBall&&--superTimer<=0) isSuperBall=false;
+    let maxBY=0;
+    bricks.forEach((row,r)=>{
+        row.forEach(b=>{
+            if(b.status===1)
+                maxBY=Math.max(maxBY,ROW_H+(r-1)*CELL_H+brickOffsetTop+CELL_H);
+        });
+    });
+    if(maxBY>pY-8){gameOver();return;}
+    drawPopups();
+    updateFormulaBar();
+    checkLevel();
+    updateUI();
+    updateHUD();
+    requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>
